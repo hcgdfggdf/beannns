@@ -173,7 +173,7 @@
         <span class="font-medium text-sm">Copied to clipboard</span>
     </div>
 
-        <script>
+    <script>
         // --- DATA ---
         const dictionary = {
             "i": "ego-sha", "me": "ego-sha", "my": "ego-sha",
@@ -218,12 +218,22 @@
             "all good": "panto-sha kalo-sha"
         };
 
-        // Generate Reverse Dictionary (Pos-Sha -> English)
-        // We prioritize the *first* occurrence in English as the primary definition.
-        const reverseDictionary = {};
-        const possessiveWords = ["philos", "katos", "skylos", "domos", "helios", "andros", "gyna", "agape-a", "nomnos", "munkos", "bananos", "regina", "regos", "rivos", "arboros"]; // List of Nouns/Possessable objects
-        const verbWords = ["esto", "fago", "vido", "bado", "filo", "lego", "salto-o", "kurro-o", "pugno-o"]; // List of Verbs
+        // Pronoun lookup table for Pos-Sha to English translation
+        const pronounCases = {
+            "ego-sha": { subject: "I", object: "me", possessive: "my" },
+            "tu-sha": { subject: "you", object: "you", possessive: "your" },
+            "iso-sha": { subject: "it", object: "it", possessive: "its" }, // Simplification
+            "nos-sha": { subject: "we", object: "us", possessive: "our" }
+        };
 
+        // List of words that are usually followed by a possessive (Nouns)
+        const possessiveWords = ["philos", "katos", "skylos", "domos", "helios", "andros", "gyna", "agape-a", "nomnos", "munkos", "bananos", "regina", "regos", "rivos", "arboros"]; 
+        
+        // List of Verbs
+        const verbWords = ["esto", "fago", "vido", "bado", "filo", "lego", "salto-o", "kurro-o", "pugno-o"]; 
+
+        // Generate Reverse Dictionary (Pos-Sha -> English)
+        const reverseDictionary = {};
         for (const [eng, pos] of Object.entries(dictionary)) {
             if (!reverseDictionary[pos]) {
                 reverseDictionary[pos] = eng;
@@ -271,7 +281,7 @@
 
         // --- TRANSLATION ENGINES ---
         
-        // 1. Eng -> Pos (No changes needed here)
+        // 1. Eng -> Pos 
         function translateToPosSha(text) {
             if (!text.trim()) return "";
             let processedText = text.toLowerCase();
@@ -298,7 +308,7 @@
             return formatCase(translatedTokens.join(''));
         }
 
-        // 2. Pos -> Eng (FIXED LOGIC HERE)
+        // 2. Pos -> Eng (FIXED AND REFINED LOGIC HERE)
         function translateToEnglish(text) {
             if (!text.trim()) return "";
             
@@ -306,74 +316,57 @@
             const rawTokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
             let translatedTokens = [];
 
+            // A helper to find the next or previous *substantive* word index
+            const findSubstantive = (start, step) => {
+                let index = start + step;
+                while (index >= 0 && index < rawTokens.length) {
+                    if (/\w+/.test(rawTokens[index])) {
+                        return { index, word: rawTokens[index].toLowerCase() };
+                    }
+                    index += step;
+                }
+                return null;
+            };
+
             for (let i = 0; i < rawTokens.length; i++) {
                 let token = rawTokens[i];
                 let cleanWord = token.toLowerCase();
 
-                // 1. Check for standard Pos-Sha words
-                if (reverseDictionary[cleanWord]) {
-                    // Handle 'ego-sha' and other invariant pronouns contextually
-                    if (cleanWord.endsWith('-sha') && (cleanWord === "ego-sha" || cleanWord === "tu-sha" || cleanWord === "iso-sha" || cleanWord === "nos-sha")) {
-                        let englishWord = reverseDictionary[cleanWord]; // Default to first entry ("i", "you", "he")
-                        
-                        // Look ahead for the next substantive word (skipping spaces/punctuation)
-                        let nextWordIndex = i + 1;
-                        let nextCleanWord = '';
-                        while (nextWordIndex < rawTokens.length) {
-                            if (/\w+/.test(rawTokens[nextWordIndex])) {
-                                nextCleanWord = rawTokens[nextWordIndex].toLowerCase();
-                                break;
-                            }
-                            nextWordIndex++;
-                        }
+                // 1. Handle invariant pronouns
+                if (pronounCases[cleanWord]) {
+                    let pronounData = pronounCases[cleanWord];
+                    let englishWord = pronounData.subject; // Default to Subject Case
 
-                        // Check for Possessive Case (e.g., ego-sha philos -> my friend)
-                        if (possessiveWords.includes(nextCleanWord)) {
-                            // Simple possessive determination (this is a rough fix)
-                            if (cleanWord === "ego-sha") englishWord = "my";
-                            else if (cleanWord === "tu-sha") englishWord = "your";
-                            else if (cleanWord === "iso-sha") englishWord = "its"; // Or his/her, but using "its" as default from dict
-                            else if (cleanWord === "nos-sha") englishWord = "our";
-                        
-                        // Check for Objective Case (e.g., vido ego-sha -> see me)
-                        // A pronoun immediately preceded by a verb and followed by nothing or punctuation is likely an object.
-                        } else if (i > 0) {
-                            let prevWordIndex = i - 1;
-                            let prevCleanWord = '';
-                            while (prevWordIndex >= 0) {
-                                if (/\w+/.test(rawTokens[prevWordIndex])) {
-                                    prevCleanWord = rawTokens[prevWordIndex].toLowerCase();
-                                    break;
-                                }
-                                prevWordIndex--;
-                            }
-
-                            if (verbWords.includes(prevCleanWord) && !nextCleanWord) {
-                                // Simple objective determination (this is a rough fix)
-                                if (cleanWord === "ego-sha") englishWord = "me";
-                                else if (cleanWord === "tu-sha") englishWord = "you";
-                                else if (cleanWord === "iso-sha") englishWord = "it"; // Or him/her
-                                else if (cleanWord === "nos-sha") englishWord = "us";
-                            }
-                        }
-                        
-                        // Otherwise, it defaults to the Subjective Case ("I", "you", "he", "we")
-                        translatedTokens.push(englishWord);
-                        continue;
+                    const nextSubstantive = findSubstantive(i, 1);
+                    const prevSubstantive = findSubstantive(i, -1);
+                    
+                    if (nextSubstantive && possessiveWords.includes(nextSubstantive.word)) {
+                        // Case 1: Possessive (e.g., ego-sha philos -> my friend)
+                        englishWord = pronounData.possessive;
+                    } else if (prevSubstantive && verbWords.includes(prevSubstantive.word) && (!nextSubstantive || verbWords.includes(nextSubstantive.word))) {
+                        // Case 2: Object (e.g., vido ego-sha -> see me)
+                        // If preceded by a verb and NOT followed by a noun, it is likely the object.
+                        // We also check if the next word is another verb (e.g., "vido ego-sha esto" -> see me be)
+                         englishWord = pronounData.object;
                     } 
                     
+                    translatedTokens.push(englishWord);
+                    continue;
+
+                // 2. Handle standard words
+                } else if (reverseDictionary[cleanWord]) {
                     translatedTokens.push(reverseDictionary[cleanWord]);
                     continue;
                 }
 
-                // 2. Check for pos...ti (Unknown word wrapper)
+                // 3. Check for pos...ti (Unknown word wrapper)
                 const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
                 if (posTiMatch) {
                     translatedTokens.push(posTiMatch[1]); // Return the inner word
                     continue;
                 }
 
-                // 3. Keep original token (punctuation, spaces, unrecognized words)
+                // 4. Keep original token (punctuation, spaces, unrecognized words)
                 translatedTokens.push(token);
             }
 
