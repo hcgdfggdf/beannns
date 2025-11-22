@@ -550,9 +550,9 @@
             if (!root) return;
             let suffix = "";
             switch(inputs.forgeType.value) {
-                case 'noun': suffix = "iz"; break; // Changed from noun-m/f
+                case 'noun': suffix = "iz"; break;
                 case 'verb': suffix = "ek"; break;
-                case 'adj': suffix = "vum"; break; // Changed from other
+                case 'adj': suffix = "vum"; break; 
                 case 'other': suffix = "ril"; break;
             }
             const cleanRoot = root.replace(/[^a-z0-9]/g, ''); 
