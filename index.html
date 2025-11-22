@@ -291,6 +291,7 @@
                 processedText = processedText.replace(new RegExp(phrase, 'gi'), translation);
             }
 
+            // Using the new regex to properly tokenize words and separators
             const tokens = text.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
             let translatedTokens = tokens.map(token => {
@@ -312,62 +313,92 @@
         function translateToEnglish(text) {
             if (!text.trim()) return "";
             
-            // Split by spaces and punctuation to get tokens
+            // Re-tokenizing with word boundaries to ensure we get a list of words only
+            const wordsOnly = text.match(/\b\w+\b/g) || [];
+            
+            // We need a list of ALL tokens (words, spaces, punctuation) to rebuild the sentence
             const rawTokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
             let translatedTokens = [];
 
-            // A helper to find the next or previous *substantive* word index
-            const findSubstantive = (start, step) => {
-                let index = start + step;
-                while (index >= 0 && index < rawTokens.length) {
-                    if (/\w+/.test(rawTokens[index])) {
-                        return { index, word: rawTokens[index].toLowerCase() };
-                    }
-                    index += step;
-                }
-                return null;
+            // Helper to find the index of the next or previous *word* in the wordsOnly array
+            const findWordIndexInWordsOnly = (wordIndex, step) => {
+                let index = wordIndex + step;
+                return (index >= 0 && index < wordsOnly.length) ? index : null;
             };
+
+            // Keep track of the current index in the wordsOnly array
+            let wordOnlyIndex = 0; 
 
             for (let i = 0; i < rawTokens.length; i++) {
                 let token = rawTokens[i];
                 let cleanWord = token.toLowerCase();
 
-                // 1. Handle invariant pronouns
-                if (pronounCases[cleanWord]) {
-                    let pronounData = pronounCases[cleanWord];
-                    let englishWord = pronounData.subject; // Default to Subject Case
+                // Check if the current token is a word
+                if (/\w+/.test(token)) {
+                    // 1. Handle invariant pronouns
+                    if (pronounCases[cleanWord]) {
+                        let pronounData = pronounCases[cleanWord];
+                        let englishWord = pronounData.subject; // Default to Subject Case
 
-                    const nextSubstantive = findSubstantive(i, 1);
-                    const prevSubstantive = findSubstantive(i, -1);
+                        // Get indices of neighboring words in the wordsOnly array
+                        const nextWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, 1);
+                        const prevWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, -1);
+                        
+                        const nextWord = nextWordOnlyIndex !== null ? wordsOnly[nextWordOnlyIndex].toLowerCase() : null;
+                        const prevWord = prevWordOnlyIndex !== null ? wordsOnly[prevWordOnlyIndex].toLowerCase() : null;
+
+                        
+                        if (nextWord && possessiveWords.includes(nextWord)) {
+                            // Case 1: Possessive (e.g., ego-sha philos -> my friend)
+                            englishWord = pronounData.possessive;
+                        } else if (prevWord && verbWords.includes(prevWord) && !nextWord) {
+                            // Case 2: Object at the end (e.g., vido ego-sha -> see me)
+                            englishWord = pronounData.object;
+                        } else if (prevWord && verbWords.includes(prevWord) && nextWord && !verbWords.includes(nextWord)) {
+                            // Case 3: Object after verb and followed by a non-verb (This handles indirect objects if the language structure allows)
+                            // Given the simple nature, we'll keep it simple: if preceded by a verb and followed by ANYTHING, it's likely an object or subject of a new clause.
+                            // To cover "vido ego-sha" where the verb comes before, we stick to the simpler end-of-sentence check above, or default to Subject unless it's Possessive.
+                            // We rely mostly on the possessive check and the end-of-sentence object check.
+                            
+                            // Let's refine the Object check to be slightly broader for sentences like "I see you" where the object is the last word.
+                            // For simplicity, if it's not possessive and not a clear subject (start of sentence or after punctuation), it might be an object.
+                            
+                            // Since the logic needs to be simple, let's prioritize Subject (default), Possessive (followed by noun), then Object (followed by nothing, and preceded by verb).
+                            // The current logic works for the provided examples:
+                            // "ego-sha philos" -> Possessive ("my")
+                            // "ego-sha vido ego-sha" -> 1st is Subject ("I"), 2nd is Object ("me")
+                            // "ego-sha vido ego-sha philos" -> 1st is Subject ("I"), 2nd is Possessive ("my")
+                            
+                            // Let's stick to the Subject/Possessive/Object at End logic as it covers the examples.
+                        }
+                        
+                        translatedTokens.push(englishWord);
+                        wordOnlyIndex++; // Move to the next word in the wordsOnly array
+                        continue;
                     
-                    if (nextSubstantive && possessiveWords.includes(nextSubstantive.word)) {
-                        // Case 1: Possessive (e.g., ego-sha philos -> my friend)
-                        englishWord = pronounData.possessive;
-                    } else if (prevSubstantive && verbWords.includes(prevSubstantive.word) && (!nextSubstantive || verbWords.includes(nextSubstantive.word))) {
-                        // Case 2: Object (e.g., vido ego-sha -> see me)
-                        // If preceded by a verb and NOT followed by a noun, it is likely the object.
-                        // We also check if the next word is another verb (e.g., "vido ego-sha esto" -> see me be)
-                         englishWord = pronounData.object;
-                    } 
-                    
-                    translatedTokens.push(englishWord);
-                    continue;
+                    // 2. Handle standard words
+                    } else if (reverseDictionary[cleanWord]) {
+                        translatedTokens.push(reverseDictionary[cleanWord]);
+                        wordOnlyIndex++;
+                        continue;
+                    }
 
-                // 2. Handle standard words
-                } else if (reverseDictionary[cleanWord]) {
-                    translatedTokens.push(reverseDictionary[cleanWord]);
-                    continue;
+                    // 3. Check for pos...ti (Unknown word wrapper)
+                    const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
+                    if (posTiMatch) {
+                        translatedTokens.push(posTiMatch[1]); // Return the inner word
+                        wordOnlyIndex++;
+                        continue;
+                    }
+
+                    // If it's a word but not in any list, just push the original token
+                    translatedTokens.push(token);
+                    wordOnlyIndex++;
+                
+                } else {
+                    // 4. Keep original token (punctuation, spaces)
+                    translatedTokens.push(token);
                 }
-
-                // 3. Check for pos...ti (Unknown word wrapper)
-                const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
-                if (posTiMatch) {
-                    translatedTokens.push(posTiMatch[1]); // Return the inner word
-                    continue;
-                }
-
-                // 4. Keep original token (punctuation, spaces, unrecognized words)
-                translatedTokens.push(token);
             }
 
             return formatCase(translatedTokens.join(''));
