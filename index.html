@@ -12,10 +12,7 @@
             --accent: #d97706; /* Amber 600 */
         }
         
-        /* --- SMOOTH SCROLL MAGIC --- */
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Manrope', sans-serif;
@@ -24,24 +21,21 @@
             background-size: 32px 32px;
             color: #1e293b;
         }
-        .font-ancient {
-            font-family: 'Cinzel', serif;
-        }
-        /* Glassmorphism Clean */
+        .font-ancient { font-family: 'Cinzel', serif; }
+        
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
         }
-        .input-area {
-            transition: all 0.3s ease;
-        }
+        .input-area { transition: all 0.3s ease; }
         .input-area:focus-within {
             background: white;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
         }
-        /* Smooth Scrollbar */
+        
+        /* Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
@@ -54,23 +48,18 @@
         }
         .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
 
-        /* Back to Top Button */
         .back-to-top {
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
+            opacity: 0; transform: translateY(20px); pointer-events: none;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .back-to-top.visible {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: all;
-        }
+        .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+        /* Swap Button Animation */
+        .rotate-180-smooth { transform: rotate(180deg); }
     </style>
 </head>
 <body id="top" class="min-h-screen flex flex-col items-center py-12 px-4 selection:bg-amber-100 selection:text-amber-900 relative">
 
-    <!-- Header -->
     <header class="text-center mb-10 animate-fade w-full max-w-4xl flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
         <div class="text-center md:text-left">
             <div class="inline-flex items-center justify-center w-12 h-12 bg-slate-900 text-amber-400 rounded-xl shadow-lg mb-2 text-2xl">
@@ -80,7 +69,6 @@
             <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project</p>
         </div>
         
-        <!-- Smooth Scroll Trigger -->
         <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior: 'smooth'})" 
                 class="group flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
             <span class="text-xs font-bold text-slate-600 group-hover:text-amber-600 uppercase tracking-wide">Vocab List</span>
@@ -88,29 +76,32 @@
         </button>
     </header>
 
-    <!-- Main Translator -->
     <main class="w-full max-w-4xl space-y-8 animate-fade" style="animation-delay: 0.1s;">
         
+        <div class="flex justify-center items-center mb-[-20px] z-10 relative">
+            <button id="swap-mode-btn" class="bg-slate-900 hover:bg-amber-500 text-amber-400 hover:text-white p-3 rounded-full shadow-lg transition-all hover:scale-110 active:rotate-180 duration-300 group">
+                <svg class="w-5 h-5 transition-transform duration-500" id="swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+            </button>
+        </div>
+
         <div class="glass-card rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row min-h-[400px]">
             
-            <!-- Input Side -->
             <div class="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 input-area bg-slate-50/50">
                 <div class="px-6 py-4 flex justify-between items-center">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">English</span>
+                    <span id="input-label" class="text-xs font-bold text-slate-400 uppercase tracking-widest transition-all">English</span>
                     <button id="clear-btn" class="text-slate-300 hover:text-red-400 transition-colors text-xs font-bold uppercase">Clear</button>
                 </div>
                 <textarea 
                     id="input-text" 
                     class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none placeholder-slate-300 outline-none text-slate-700 leading-relaxed"
-                    placeholder="Type your thoughts here, twin..."
+                    placeholder="Type here..."
                     spellcheck="false"
                 ></textarea>
             </div>
 
-            <!-- Output Side -->
             <div class="flex-1 flex flex-col bg-white/60 relative">
                 <div class="px-6 py-4 flex justify-between items-center">
-                    <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Translation</span>
+                    <span id="output-label" class="text-xs font-bold text-amber-600 uppercase tracking-widest transition-all">Pos-Sha</span>
                     <div class="flex gap-2">
                         <span class="h-2 w-2 rounded-full bg-red-400"></span>
                         <span class="h-2 w-2 rounded-full bg-amber-400"></span>
@@ -124,7 +115,6 @@
                     placeholder="..."
                 ></textarea>
                 
-                <!-- Copy Action -->
                 <div class="absolute bottom-6 right-6">
                     <button id="copy-btn" class="group flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full transition-all hover:shadow-lg active:scale-95">
                         <span class="text-sm font-bold">Copy</span>
@@ -134,16 +124,14 @@
             </div>
         </div>
 
-        <!-- Tools Section (Split) -->
         <div id="vocab-section" class="grid md:grid-cols-3 gap-6 scroll-mt-6" style="animation-delay: 0.2s;">
             
-            <!-- Word Forger -->
             <div class="glass-card rounded-3xl p-6 md:col-span-1 flex flex-col justify-center">
                 <h3 class="font-ancient font-bold text-lg text-slate-800 mb-1">Word Forger ⚒️</h3>
-                <p class="text-xs text-slate-400 mb-4">Create custom words manually.</p>
+                <p class="text-xs text-slate-400 mb-4">Create custom Pos-Sha words.</p>
                 
                 <div class="space-y-3">
-                    <input type="text" id="forge-input" placeholder="Root (e.g. Teacher)" class="w-full bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition-shadow">
+                    <input type="text" id="forge-input" placeholder="Root (e.g. Teach)" class="w-full bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition-shadow">
                     <div class="relative">
                         <select id="forge-type" class="w-full appearance-none bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none text-slate-600 transition-shadow cursor-pointer">
                             <option value="noun-m">Noun (M/N) [-os]</option>
@@ -162,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- Vocab List -->
             <div class="glass-card rounded-3xl p-6 md:col-span-2 overflow-hidden flex flex-col h-64 md:h-auto">
                 <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
                     <h3 class="font-ancient font-bold text-lg text-slate-800">The Golden Rules</h3>
@@ -171,19 +158,16 @@
                 
                 <div class="overflow-y-auto custom-scroll pr-2">
                     <div class="grid grid-cols-2 gap-2 text-sm" id="vocab-list">
-                        <!-- JS Injected -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Back to Top Button -->
     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="back-to-top" class="back-to-top fixed bottom-8 right-8 bg-slate-900 text-amber-400 p-3 rounded-full shadow-xl hover:scale-110 transition-transform z-40">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
     </button>
 
-    <!-- Notification Toast -->
     <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-[-20px] z-50">
         <span class="text-amber-400 text-lg">✓</span>
         <span class="font-medium text-sm">Copied to clipboard</span>
@@ -234,12 +218,25 @@
             "all good": "panto-sha kalo-sha"
         };
 
+        // Generate Reverse Dictionary (Pos-Sha -> English)
+        // We prioritize the *first* occurrence in English as the primary definition.
+        const reverseDictionary = {};
+        for (const [eng, pos] of Object.entries(dictionary)) {
+            if (!reverseDictionary[pos]) {
+                reverseDictionary[pos] = eng;
+            }
+        }
+
         // --- DOM ELEMENTS ---
         const inputs = {
             main: document.getElementById('input-text'),
             output: document.getElementById('output-text'),
             clear: document.getElementById('clear-btn'),
             copy: document.getElementById('copy-btn'),
+            swapBtn: document.getElementById('swap-mode-btn'),
+            swapIcon: document.getElementById('swap-icon'),
+            inputLabel: document.getElementById('input-label'),
+            outputLabel: document.getElementById('output-label'),
             forgeRoot: document.getElementById('forge-input'),
             forgeType: document.getElementById('forge-type'),
             forgeBtn: document.getElementById('forge-btn'),
@@ -248,6 +245,9 @@
             vocabList: document.getElementById('vocab-list'),
             backToTop: document.getElementById('back-to-top')
         };
+
+        // --- STATE ---
+        let isEnglishToPosSha = true;
 
         // --- INIT VOCAB UI ---
         const starterPack = {
@@ -266,50 +266,77 @@
             inputs.vocabList.appendChild(div);
         }
 
-        // --- TRANSLATION ENGINE ---
-        function translate(text) {
+        // --- TRANSLATION ENGINES ---
+        
+        // 1. Eng -> Pos
+        function translateToPosSha(text) {
             if (!text.trim()) return "";
-            
             let processedText = text.toLowerCase();
             
-            // 1. Phrase Replacement
+            // Phrases
             for (const [phrase, translation] of Object.entries(phrases)) {
                 processedText = processedText.replace(new RegExp(phrase, 'gi'), translation);
             }
 
-            // 2. Tokenization (Split by word, preserving punctuation)
             const tokens = text.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
-            // 3. Word Logic
             let translatedTokens = tokens.map(token => {
-                if (/^[\s\p{P}]+$/u.test(token)) return token; // Keep punct/space
-                
+                if (/^[\s\p{P}]+$/u.test(token)) return token; 
                 const cleanWord = token.toLowerCase();
                 
-                // Known Word
                 if (dictionary[cleanWord]) return dictionary[cleanWord];
-                
-                // Plural Check (cats -> katos)
                 if (cleanWord.endsWith('s')) {
                     const singular = cleanWord.slice(0, -1);
                     if (dictionary[singular]) return dictionary[singular];
                 }
-
-                // Unknown Word Logic (pos...ti)
                 return `pos${cleanWord}ti`;
             });
 
-            // 4. Reassembly & Formatting
-            let final = translatedTokens.join('');
-            final = final.replace(/(?:^|[.!?]\s+)([a-z])/g, (c) => c.toUpperCase()); // Sentence case
-            
-            return final;
+            return formatCase(translatedTokens.join(''));
+        }
+
+        // 2. Pos -> Eng
+        function translateToEnglish(text) {
+            if (!text.trim()) return "";
+            const tokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
+
+            let translatedTokens = tokens.map(token => {
+                if (/^[\s\p{P}]+$/u.test(token)) return token;
+                const cleanWord = token.toLowerCase();
+
+                // Check dictionary first
+                if (reverseDictionary[cleanWord]) return reverseDictionary[cleanWord];
+
+                // Check for pos...ti (Unknown word wrapper)
+                const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
+                if (posTiMatch) {
+                    return posTiMatch[1]; // Return the inner word (e.g. poscomputerti -> computer)
+                }
+
+                // If it's a custom word not in dict, just return it
+                return token;
+            });
+
+            return formatCase(translatedTokens.join(''));
+        }
+
+        // Helper for sentence case
+        function formatCase(str) {
+            return str.replace(/(?:^|[.!?]\s+)([a-z])/g, (c) => c.toUpperCase());
+        }
+
+        // Master Function
+        function processTranslation() {
+            const text = inputs.main.value;
+            if (isEnglishToPosSha) {
+                inputs.output.value = translateToPosSha(text);
+            } else {
+                inputs.output.value = translateToEnglish(text);
+            }
         }
 
         // --- EVENTS ---
-        inputs.main.addEventListener('input', (e) => {
-            inputs.output.value = translate(e.target.value);
-        });
+        inputs.main.addEventListener('input', processTranslation);
 
         inputs.clear.addEventListener('click', () => {
             inputs.main.value = '';
@@ -317,11 +344,43 @@
             inputs.main.focus();
         });
 
+        inputs.swapBtn.addEventListener('click', () => {
+            // Flip State
+            isEnglishToPosSha = !isEnglishToPosSha;
+            
+            // Animate Icon
+            inputs.swapIcon.classList.toggle('rotate-180-smooth');
+            
+            // Swap Labels
+            if (isEnglishToPosSha) {
+                inputs.inputLabel.textContent = "English";
+                inputs.inputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
+                inputs.outputLabel.textContent = "Pos-Sha";
+                inputs.outputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
+                inputs.main.placeholder = "Type your thoughts here, twin...";
+            } else {
+                inputs.inputLabel.textContent = "Pos-Sha";
+                inputs.inputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
+                inputs.outputLabel.textContent = "English";
+                inputs.outputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
+                inputs.main.placeholder = "Type Pos-Sha here (e.g. ego-sha)...";
+            }
+
+            // Swap Text Content
+            const currentIn = inputs.main.value;
+            const currentOut = inputs.output.value;
+            
+            inputs.main.value = currentOut;
+            inputs.output.value = currentIn; // or re-translate. Usually simpler to just re-translate Main.
+            
+            // Re-run translation immediately on the swapped text
+            processTranslation();
+        });
+
         inputs.copy.addEventListener('click', () => {
             if (!inputs.output.value) return;
             inputs.output.select();
             document.execCommand('copy');
-            
             const toast = document.getElementById('toast');
             toast.classList.remove('opacity-0', 'translate-y-[-20px]');
             setTimeout(() => toast.classList.add('opacity-0', 'translate-y-[-20px]'), 2000);
@@ -330,7 +389,6 @@
         inputs.forgeBtn.addEventListener('click', () => {
             const root = inputs.forgeRoot.value.trim().toLowerCase();
             if (!root) return;
-            
             let suffix = "";
             switch(inputs.forgeType.value) {
                 case 'noun-m': suffix = "os"; break;
@@ -338,22 +396,15 @@
                 case 'verb': suffix = "o"; break;
                 case 'other': suffix = "sha"; break;
             }
-            
             inputs.forgeOut.textContent = root + suffix;
             inputs.forgeRes.classList.remove('hidden');
         });
 
-        // --- SCROLL LISTENER ---
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                inputs.backToTop.classList.add('visible');
-            } else {
-                inputs.backToTop.classList.remove('visible');
-            }
+            if (window.scrollY > 300) inputs.backToTop.classList.add('visible');
+            else inputs.backToTop.classList.remove('visible');
         });
 
     </script>
 </body>
 </html>
-
-
