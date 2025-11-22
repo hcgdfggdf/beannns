@@ -134,10 +134,10 @@
                     <input type="text" id="forge-input" placeholder="Root (e.g. Teach)" class="w-full bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition-shadow">
                     <div class="relative">
                         <select id="forge-type" class="w-full appearance-none bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none text-slate-600 transition-shadow cursor-pointer">
-                            <option value="noun-m">Noun (M/N) [-os]</option>
-                            <option value="noun-f">Noun (Fem) [-a]</option>
-                            <option value="verb">Verb [-o]</option>
-                            <option value="other">Other [-sha]</option>
+                            <option value="noun">Noun [-iz]</option>
+                            <option value="verb">Verb [-ek]</option>
+                            <option value="adj">Adjective/Adverb [-vum]</option>
+                            <option value="other">Other [-ril]</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
                             <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -158,8 +158,7 @@
                 
                 <div class="overflow-y-auto custom-scroll pr-2">
                     <div class="grid grid-cols-2 gap-2 text-sm" id="vocab-list">
-                        <!-- Vocab list populated by JS -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -176,178 +175,158 @@
 
     <script>
         // --- DATA ---
+        // NEW SUFFIXES: -iz (Noun), -ek (Verb), -vum (Adjective/Adverb), -ril (Pronoun/Particle)
+
         const dictionary = {
-            // --- PRONOUNS & ARTICLES (CORE) ---
-            "i": "ego-sha", "me": "ego-sha", "my": "ego-sha", "mine": "ego-sha",
-            "you": "tu-sha", "your": "tu-sha", "yours": "tu-sha",
-            "he": "iso-sha", "him": "iso-sha", "his": "iso-sha",
-            "she": "iso-sha", "her": "iso-sha", "hers": "iso-sha",
-            "it": "iso-sha", "its": "iso-sha",
-            "we": "nos-sha", "us": "nos-sha", "our": "nos-sha", "ours": "nos-sha",
-            "they": "illi-sha", "them": "illi-sha", "their": "illi-sha", "theirs": "illi-sha",
-            "this": "hic-sha", "that": "ille-sha", "these": "hic-sha", "those": "ille-sha",
-            "who": "quis-sha", "what": "quid-sha", "where": "ubi-sha",
-            "the": "to-sha", "a": "a-sha", "an": "a-sha",
-            "some": "aliquis-sha", "many": "multi-sha", "much": "multi-sha",
-            "one": "uno-sha", "two": "duo-sha", "three": "tres-sha",
+            // --- PRONOUNS & ARTICLES (-ril) ---
+            "i": "egoril", "me": "egoril", "my": "egoril", "mine": "egoril",
+            "you": "turil", "your": "turil", "yours": "turil",
+            "he": "isoril", "him": "isoril", "his": "isoril",
+            "she": "isoril", "her": "isoril", "hers": "isoril",
+            "it": "isoril", "its": "isoril",
+            "we": "nosril", "us": "nosril", "our": "nosril", "ours": "nosril",
+            "they": "illiril", "them": "illiril", "their": "illiril", "theirs": "illiril",
+            "this": "hicril", "that": "illeril", "these": "hicril", "those": "illeril",
+            "who": "quisril", "what": "quidril", "where": "ubiril",
+            "the": "toril", "a": "aril", "an": "aril",
+            "some": "alquiril", "many": "multiril", "much": "multiril",
+            "one": "unoril", "two": "duoril", "three": "tresril",
 
-            // --- COMMON NOUNS (MASC/NEUTER: -os) ---
-            "friend": "philos", "homie": "philos", "buddy": "philos", "twin": "philos",
-            "cat": "katos", "kitty": "katos",
-            "dog": "skylos", "dawg": "skylos", "pup": "skylos",
-            "house": "domos", "home": "domos", "crib": "domos", "building": "domos",
-            "sun": "helios", "star": "astros", "moon": "selenos",
-            "man": "andros", "dude": "andros", "guy": "andros",
-            "boy": "pais-m", "son": "pais-m",
-            "food": "nomnos", "grub": "nomnos", "meal": "nomnos",
-            "monkey": "munkos", "banana": "bananos",
-            "river": "rivos", "ocean": "maros", "sea": "maros",
-            "tree": "arboros", "wood": "lignos", "forest": "silvos",
-            "water": "hydros", "air": "aeros", "fire": "pyros", "earth": "geos",
-            "time": "chronos", "day": "hemeros", "night": "noctos", "life": "bios",
-            "death": "thanatos", "name": "nomenos", "place": "topos",
-            "work": "ergos", "money": "nummos", "cash": "nummos",
-            "city": "polis", "town": "polis",
-            "problem": "malos", "thing": "kosmos", "object": "kosmos",
-            "mind": "psykhos", "heart": "kardios", "body": "somatos",
-            "magic": "magos", "spell": "magos", "god": "theos",
+            // --- COMMON NOUNS (-iz) ---
+            "friend": "zeniz", "homie": "zeniz", "buddy": "zeniz", "twin": "zeniz",
+            "cat": "katiz", "kitty": "katiz",
+            "dog": "kryguz", "dawg": "kryguz", "pup": "kryguz",
+            "house": "domiiz", "home": "domiiz", "crib": "domiiz", "building": "domiiz",
+            "sun": "soliz", "star": "stelliz", "moon": "luniz",
+            "man": "hominiz", "dude": "hominiz", "guy": "hominiz",
+            "boy": "paiz", "son": "paiz",
+            "food": "shiniz", "grub": "shiniz", "meal": "shiniz",
+            "river": "riviz", "ocean": "mariz", "sea": "mariz",
+            "tree": "arbiz", "water": "hidriz", "air": "aeriz", "fire": "pyriz", "earth": "terriz",
+            "time": "tymeriz", "day": "luriz", "night": "noxiz", "life": "viviz",
+            "death": "moriz", "name": "nomiz", "place": "topiz",
+            "work": "ergiz", "money": "numiz", "cash": "numiz",
+            "city": "poliz", "problem": "maliz", "thing": "kosiz",
+            "mind": "psykiz", "heart": "kardiz", "body": "somiz",
+            "magic": "magiz", "god": "deiz",
+            "woman": "gyniz", "girl": "gyniz", "lady": "gyniz", 
+            "love": "amiiz", "affection": "amiiz",
+            "queen": "regiz", "idea": "conceptiz", "thought": "conceptiz",
 
-            // --- COMMON NOUNS (FEMININE: -a) ---
-            "woman": "gyna", "girl": "gyna", "lady": "gyna", 
-            "love": "agape-a", "affection": "agape-a",
-            "queen": "regina", "princess": "regina-a",
-            "hand": "cheir-a", "foot": "pod-a",
-            "story": "myth-a", "tale": "myth-a",
-            "freedom": "liber-a", "liberty": "liber-a",
-            "idea": "concept-a", "thought": "concept-a",
+            // --- VERBS (INFINITIVE: -ek) ---
+            "is": "jestek", "am": "jestek", "are": "jestek", "be": "jestek", "was": "jestek", "were": "jestek",
+            "eat": "fodrek", "ate": "fodrek", "to eat": "fodrek",
+            "see": "vidrek", "saw": "vidrek", "to see": "vidrek",
+            "go": "badek", "went": "badek", "to go": "badek",
+            "like": "filtek", "loved": "filtek", "to like": "filtek",
+            "speak": "legrek", "say": "legrek", "said": "legrek", "to speak": "legrek",
+            "jump": "saltek", "to jump": "saltek",
+            "run": "kurrek", "to run": "kurrek",
+            "fight": "pugnek", "to fight": "pugnek",
+            "do": "facyek", "make": "facyek", "did": "facyek",
+            "come": "venyek", "came": "venyek",
+            "take": "capek", "took": "capek",
+            "give": "dontek", "gave": "dontek",
+            "walk": "ambulek", "sleep": "hypnek",
+            "know": "skiyek", "understand": "skiyek",
+            "want": "volek", "need": "volek",
+            "help": "juvlek", "assist": "juvlek",
+            "think": "cogtek", "thought": "cogtek",
+            "play": "ludek", "game": "ludek",
 
-            // --- VERBS (INFINITIVE: -o) ---
-            "is": "esto", "am": "esto", "are": "esto", "be": "esto", "was": "esto", "were": "esto",
-            "eat": "fago", "ate": "fago", "to eat": "fago",
-            "see": "vido", "saw": "vido", "to see": "vido",
-            "go": "bado", "went": "bado", "to go": "bado",
-            "like": "filo", "loved": "filo", "to like": "filo",
-            "speak": "lego", "say": "lego", "said": "lego", "to speak": "lego",
-            "jump": "salto-o", "to jump": "salto-o",
-            "run": "kurro-o", "to run": "kurro-o",
-            "fight": "pugno-o", "to fight": "pugno-o",
-            "do": "facio-o", "make": "facio-o", "did": "facio-o",
-            "come": "venio-o", "came": "venio-o",
-            "take": "capio-o", "took": "capio-o",
-            "give": "dono-o", "gave": "dono-o",
-            "walk": "ambulo-o", "sleep": "hypno-o",
-            "know": "scio-o", "understand": "scio-o",
-            "want": "volo-o", "need": "volo-o",
-            "hear": "audio-o", "listen": "audio-o",
-            "help": "iuvo-o", "assist": "iuvo-o",
-            "think": "cogito-o", "thought": "cogito-o",
-            "play": "ludo-o", "game": "ludo-o",
+            // --- ADJECTIVES & ADVERBS (-vum) ---
+            "big": "megavum", "huge": "megavum", "large": "megavum",
+            "small": "mikrovum", "lil": "mikrovum", "tiny": "mikrovum",
+            "good": "gudovum", "great": "gudovum", "well": "gudovum",
+            "bad": "kaklovum", "evil": "kaklovum", "poorly": "kaklovum",
+            "happy": "hapivum", "joyful": "hapivum",
+            "sad": "lugetvum", "unhappy": "lugetvum",
+            "fast": "tashovum", "quickly": "tashovum",
+            "slow": "bradovum", "slowly": "bradovum",
+            "old": "vetuvum", "new": "neovum",
+            "hot": "termovum", "cold": "kryovum",
+            "full": "plenvum", "empty": "vacuvum",
+            "strong": "potenvum", "weak": "impovum",
+            "beautiful": "belluvum", "ugly": "turpivum",
 
-            // --- ADJECTIVES & ADVERBS (-sha) ---
-            "big": "mega-sha", "huge": "mega-sha", "large": "mega-sha",
-            "small": "mikro-sha", "lil": "mikro-sha", "tiny": "mikro-sha",
-            "good": "kalo-sha", "great": "kalo-sha", "well": "kalo-sha",
-            "bad": "kako-sha", "evil": "kako-sha", "poorly": "kako-sha",
-            "happy": "hapi-sha", "joyful": "hapi-sha",
-            "sad": "luget-sha", "unhappy": "luget-sha",
-            "fast": "tacho-sha", "quick": "tacho-sha", "quickly": "tacho-sha",
-            "slow": "brady-sha", "slowly": "brady-sha",
-            "old": "vetus-sha", "ancient": "vetus-sha",
-            "new": "neos-sha", "fresh": "neos-sha",
-            "hot": "thermo-sha", "cold": "kryo-sha",
-            "full": "plen-sha", "empty": "vacu-sha",
-            "strong": "potens-sha", "weak": "impotens-sha",
-            "beautiful": "bellus-sha", "pretty": "bellus-sha",
-            "ugly": "turpis-sha", "difficult": "difficil-sha", "easy": "facil-sha",
-            "here": "hic-locus-sha", "there": "illic-locus-sha",
-            "now": "nunc-sha", "then": "tunc-sha", "always": "semper-sha",
-            "never": "numquam-sha", "sure": "certus-sha", "certainly": "certus-sha",
-            "maybe": "fortasse-sha",
-
-            // --- CONJUNCTIONS & PREPOSITIONS (-sha) ---
-            "no": "ne-sha", "not": "ne-sha", "nah": "ne-sha",
-            "yes": "ya-sha", "yeah": "ya-sha", "yep": "ya-sha",
-            "all": "panto-sha", "everything": "panto-sha",
-            "and": "et-sha", "but": "sed-sha", "or": "vel-sha",
-            "for": "pro-sha", "on": "sur-sha", "in": "in-sha", "with": "cum-sha",
-            "of": "de-sha", "from": "de-sha", "to": "ad-sha",
-            "at": "apud-sha", "up": "supra-sha", "down": "infra-sha",
-            "because": "quia-sha", "if": "si-sha", "when": "quando-sha",
-            "how": "quomodo-sha",
-
-            // --- COLORS (-sha) ---
-            "red": "rudo-sha", "blue": "bluo-sha",
-            "green": "virid-sha", "yellow": "flavus-sha",
-            "black": "nigrum-sha", "white": "album-sha",
+            // --- CONJUNCTIONS & PREPOSITIONS (-ril) ---
+            "no": "noril", "not": "noril", "nah": "noril",
+            "yes": "yaril", "yeah": "yaril", "yep": "yaril",
+            "all": "pantaril", "everything": "pantaril",
+            "and": "enril", "but": "sedril", "or": "velril",
+            "for": "proril", "on": "surril", "in": "inril", "with": "cumril",
+            "of": "deril", "from": "deril", "to": "adril",
+            "because": "quiaril", "if": "siril", "when": "quandoril",
+            "how": "quomoril",
 
             // --- GREETINGS & SLANG ---
-            "hello": "hello-sha", "hi": "hello-sha", "yo": "hello-sha",
-            "bye": "vale-sha", "peace": "pax-sha",
-            "let's": "nos-sha", 
-            "dope": "kalo-sha", "lit": "kalo-sha"
+            "hello": "saluvum", "hi": "saluvum", "yo": "saluvum",
+            "bye": "valeril", "peace": "paxril",
+            "let's": "nosril", 
+            "dope": "gudovum", "lit": "gudovum"
         };
 
         const phrases = {
-            "my bad": "ego-sha kako-sha",
-            "let's go": "nos-sha bado",
-            "it's all good": "iso-sha panto-sha kalo-sha",
-            "all good": "panto-sha kalo-sha",
-            "i love you": "ego-sha filo tu-sha",
-            "i know": "ego-sha scio-o",
-            "peace out": "vale-sha pax-sha"
+            "my bad": "egoril kaklovum",
+            "let's go": "nosril badek",
+            "it's all good": "isoril pantaril gudovum",
+            "all good": "pantaril gudovum",
+            "i love you": "egoril filtek turil",
+            "i know": "egoril skiyek",
+            "peace out": "valeril paxril"
         };
 
         // Pronoun lookup table for Pos-Sha to English translation
         const pronounCases = {
-            "ego-sha": { subject: "I", object: "me", possessive: "my" },
-            "tu-sha": { subject: "you", object: "you", possessive: "your" },
-            "iso-sha": { subject: "he", object: "him", possessive: "his" }, 
-            "nos-sha": { subject: "we", object: "us", possessive: "our" },
-            "illi-sha": { subject: "they", object: "them", possessive: "their" },
-            "to-sha": { subject: "the", object: "the", possessive: "the" },
-            "a-sha": { subject: "a", object: "a", possessive: "a" },
-            "hic-sha": { subject: "this", object: "this", possessive: "this" },
-            "ille-sha": { subject: "that", object: "that", possessive: "that" }
+            "egoril": { subject: "I", object: "me", possessive: "my" },
+            "turil": { subject: "you", object: "you", possessive: "your" },
+            "isoril": { subject: "he", object: "him", possessive: "his" }, 
+            "nosril": { subject: "we", object: "us", possessive: "our" },
+            "illiril": { subject: "they", object: "them", possessive: "their" },
+            "toril": { subject: "the", object: "the", possessive: "the" },
+            "aril": { subject: "a", object: "a", possessive: "a" },
+            "hicril": { subject: "this", object: "this", possessive: "this" },
+            "illeril": { subject: "that", object: "that", possessive: "that" }
         };
 
-        // List of words that are usually followed by a possessive (Nouns ending in -os or -a)
+        // List of words that are usually followed by a possessive (Nouns ending in -iz)
         const possessiveWords = [
-            "philos", "katos", "skylos", "domos", "helios", "astros", "selenos", "andros", "pais-m",
-            "nomnos", "munkos", "bananos", "rivos", "maros", "arboros", "lignos", "silvos",
-            "hydros", "aeros", "pyros", "geos", "chronos", "hemeros", "noctos", "bios",
-            "thanatos", "nomenos", "topos", "ergos", "nummos", "polis", "malos", "kosmos",
-            "psykhos", "kardios", "somatos", "magos", "theos",
-            "gyna", "agape-a", "regina", "regina-a", "cheir-a", "pod-a", "myth-a", "liber-a", "concept-a"
+            "zeniz", "katiz", "kryguz", "domiiz", "soliz", "stelliz", "luniz", "hominiz", "paiz",
+            "shiniz", "riviz", "mariz", "arbiz", "hidriz", "aeriz", "pyriz", "terriz",
+            "tymeriz", "luriz", "noxiz", "viviz", "moriz", "nomiz", "topiz",
+            "ergiz", "numiz", "poliz", "maliz", "kosiz",
+            "psykiz", "kardiz", "somiz", "magiz", "deiz",
+            "gyniz", "amiiz", "regiz", "conceptiz"
         ];
 
-        // List of Verbs (ending in -o)
+        // List of Verbs (ending in -ek)
         const verbWords = [
-            "esto", "fago", "vido", "bado", "filo", "lego",
-            "salto-o", "kurro-o", "pugno-o", "facio-o", "venio-o", "capio-o",
-            "dono-o", "ambulo-o", "hypno-o", "scio-o", "volo-o", "audio-o",
-            "iuvo-o", "cogito-o", "ludo-o"
+            "jestek", "fodrek", "vidrek", "badek", "filtek", "legrek",
+            "saltek", "kurrek", "pugnek", "facyek", "venyek", "capek",
+            "dontek", "ambulek", "hypnek", "skiyek", "volek", "juvlek",
+            "cogtek", "ludek"
         ];
-
+        
         // Generate Reverse Dictionary (Pos-Sha -> English)
         const reverseDictionary = {};
         for (const [eng, pos] of Object.entries(dictionary)) {
-            // If the Pos-Sha word is NOT an invariant pronoun, store the primary English word.
             if (!pronounCases[pos]) {
-                // Prioritize shorter, common roots
                 const currentRoot = reverseDictionary[pos];
-                if (!currentRoot || (eng.length < currentRoot.length && eng.length > 2) || (["i", "you", "he", "she", "it", "we", "they", "the", "a", "an"].includes(eng))) {
+                // Simple check for primary word
+                if (!currentRoot || eng.length < currentRoot.length) {
                     reverseDictionary[pos] = eng;
                 }
             }
         }
         
         // Explicitly set some common or key roots
-        reverseDictionary["gyna"] = "woman"; 
-        reverseDictionary["pais-m"] = "boy";
-        reverseDictionary["agape-a"] = "love";
-        reverseDictionary["regina"] = "queen";
-        reverseDictionary["scio-o"] = "know"; 
-        reverseDictionary["facio-o"] = "do"; 
+        reverseDictionary["gyniz"] = "woman"; 
+        reverseDictionary["paiz"] = "boy";
+        reverseDictionary["amiiz"] = "love";
+        reverseDictionary["regiz"] = "queen";
+        reverseDictionary["skiyek"] = "know"; 
+        reverseDictionary["facyek"] = "do"; 
+
 
         // --- DOM ELEMENTS ---
         const inputs = {
@@ -372,14 +351,14 @@
         let isEnglishToPosSha = true;
 
         // --- INIT VOCAB UI ---
-        // Expanded starter pack for the UI
+        // Expanded starter pack for the UI using the NEW words
         const starterPack = {
-            "I/Me/My": "ego-sha", "You/Your": "tu-sha", "He/She/It": "iso-sha", "We/Us": "nos-sha",
-            "The/A": "to-sha/a-sha", "Friend/Homie": "philos", "Dog/Dawg": "skylos", "House/Home": "domos",
-            "Love": "agape-a", "Food": "nomnos", "Time": "chronos", "To Be": "esto",
-            "To Eat": "fago", "To Go": "bado", "To Know": "scio-o", "Big": "mega-sha",
-            "Small": "mikro-sha", "Good": "kalo-sha", "Bad": "kako-sha", "No/Not": "ne-sha", 
-            "Yes": "ya-sha", "Hello": "hello-sha", "And": "et-sha", "With": "cum-sha"
+            "I/Me/My": "egoril", "You/Your": "turil", "He/She/It": "isoril", "We/Us": "nosril",
+            "The/A": "toril/aril", "Friend/Homie": "zeniz", "Dog/Dawg": "kryguz", "House/Home": "domiiz",
+            "Love": "amiiz", "Food": "shiniz", "Time": "tymeriz", "To Be": "jestek",
+            "To Eat": "fodrek", "To Go": "badek", "To Know": "skiyek", "Big": "megavum",
+            "Small": "mikrovum", "Good": "gudovum", "Bad": "kaklovum", "No/Not": "noril", 
+            "Yes": "yaril", "Hello": "saluvum", "And": "enril", "With": "cumril"
         };
 
         // Clear existing list and populate with the expanded starter pack
@@ -400,7 +379,6 @@
             
             // Phrases (Handle multi-word phrases first)
             for (const [phrase, translation] of Object.entries(phrases)) {
-                // Use word boundary \b to avoid matching 'my bad' inside a word like 'something my bad something'
                 processedText = processedText.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), translation);
             }
 
@@ -408,7 +386,6 @@
             const tokens = processedText.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
             let translatedTokens = tokens.map(token => {
-                // If token is just punctuation or space, return it unchanged
                 if (/^[\s\p{P}]+$/u.test(token)) return token; 
                 
                 const cleanWord = token.toLowerCase();
@@ -426,7 +403,6 @@
                 return `pos${cleanWord}ti`;
             });
 
-            // Re-apply proper casing to the resulting Pos-Sha sentence
             return formatCase(translatedTokens.join(''));
         }
 
@@ -434,33 +410,27 @@
         function translateToEnglish(text) {
             if (!text.trim()) return "";
             
-            // Get a list of *only* the words to check context for pronouns
             const wordsOnly = text.match(/\b\w+\b/g) || [];
-            
-            // Get a list of ALL tokens (words, spaces, punctuation) to rebuild the sentence
             const rawTokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
             let translatedTokens = [];
 
-            // Helper to find the index of the next or previous *word* in the wordsOnly array
             const findWordIndexInWordsOnly = (wordOnlyIndex, step) => {
                 let index = wordOnlyIndex + step;
                 return (index >= 0 && index < wordsOnly.length) ? index : null;
             };
 
-            // Keep track of the current index in the wordsOnly array
             let wordOnlyIndex = 0; 
 
             for (let i = 0; i < rawTokens.length; i++) {
                 let token = rawTokens[i];
                 let cleanWord = token.toLowerCase();
 
-                // Check if the current token is a word
                 if (/\w+/.test(token)) {
                     
                     // --- 1. Handle invariant pronouns (contextual cases) ---
                     if (pronounCases[cleanWord]) {
                         let pronounData = pronounCases[cleanWord];
-                        let englishWord = pronounData.subject; // Default to Subject Case
+                        let englishWord = pronounData.subject; 
 
                         const nextWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, 1);
                         const prevWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, -1);
@@ -468,11 +438,11 @@
                         const nextWord = nextWordOnlyIndex !== null ? wordsOnly[nextWordOnlyIndex].toLowerCase() : null;
                         const prevWord = prevWordOnlyIndex !== null ? wordsOnly[prevWordOnlyIndex].toLowerCase() : null;
                         
-                        // Rule 1: Possessive Case (followed by a possessable noun)
+                        // Rule 1: Possessive Case (followed by a possessable noun: ending in -iz)
                         if (nextWord && possessiveWords.includes(nextWord)) {
                             englishWord = pronounData.possessive;
                         
-                        // Rule 2: Objective Case (preceded by a verb and *not* followed by a verb/start of new clause)
+                        // Rule 2: Objective Case (preceded by a verb: ending in -ek)
                         } else if (prevWord && verbWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
                             englishWord = pronounData.object;
                         } 
@@ -506,13 +476,11 @@
                 }
             }
 
-            // Apply capitalization to the *translated* English words
             return formatCase(translatedTokens.join(''));
         }
 
         // Helper for sentence case
         function formatCase(str) {
-            // Capitalizes the first letter of the whole string and after sentence endings
             return str.replace(/(?:^|[.!?]\s+)([a-z])/g, (c) => c.toUpperCase());
         }
 
@@ -536,13 +504,10 @@
         });
 
         inputs.swapBtn.addEventListener('click', () => {
-            // Flip State
             isEnglishToPosSha = !isEnglishToPosSha;
             
-            // Animate Icon
             inputs.swapIcon.classList.toggle('rotate-180-smooth');
             
-            // Swap Labels
             if (isEnglishToPosSha) {
                 inputs.inputLabel.textContent = "English";
                 inputs.inputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
@@ -554,24 +519,21 @@
                 inputs.inputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
                 inputs.outputLabel.textContent = "English";
                 inputs.outputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
-                inputs.main.placeholder = "Type Pos-Sha here (e.g. ego-sha)...";
+                inputs.main.placeholder = "Type Pos-Sha here (e.g. egoril)...";
             }
 
-            // Swap Text Content
             const currentIn = inputs.main.value;
             const currentOut = inputs.output.value;
             
             inputs.main.value = currentOut;
             inputs.output.value = currentIn;
             
-            // Re-run translation immediately on the swapped text
             processTranslation();
         });
 
         inputs.copy.addEventListener('click', () => {
             if (!inputs.output.value) return;
             inputs.output.select();
-            // Use modern clipboard API if available, fallback to execCommand
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(inputs.output.value);
             } else {
@@ -588,12 +550,11 @@
             if (!root) return;
             let suffix = "";
             switch(inputs.forgeType.value) {
-                case 'noun-m': suffix = "os"; break;
-                case 'noun-f': suffix = "a"; break;
-                case 'verb': suffix = "o"; break;
-                case 'other': suffix = "sha"; break;
+                case 'noun': suffix = "iz"; break; // Changed from noun-m/f
+                case 'verb': suffix = "ek"; break;
+                case 'adj': suffix = "vum"; break; // Changed from other
+                case 'other': suffix = "ril"; break;
             }
-            // Simple sanitization to remove common punctuation/spaces for the root
             const cleanRoot = root.replace(/[^a-z0-9]/g, ''); 
             
             inputs.forgeOut.textContent = cleanRoot + suffix;
@@ -605,7 +566,6 @@
             else inputs.backToTop.classList.remove('visible');
         });
 
-        // Initial focus on load
         window.addEventListener('load', () => {
             inputs.main.focus();
             inputs.main.placeholder = "Type your thoughts here, twin...";
@@ -614,4 +574,3 @@
     </script>
 </body>
 </html>
-
