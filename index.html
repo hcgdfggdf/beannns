@@ -178,15 +178,19 @@
         const dictionary = {
             "i": "ego-sha", "me": "ego-sha", "my": "ego-sha",
             "you": "tu-sha", "your": "tu-sha",
-            "he": "iso-sha", "she": "iso-sha", "it": "iso-sha", "its": "iso-sha",
+            "he": "iso-sha", "him": "iso-sha", "his": "iso-sha",
+            "she": "iso-sha", "her": "iso-sha", 
+            "it": "iso-sha", "its": "iso-sha",
             "we": "nos-sha", "us": "nos-sha", "our": "nos-sha",
+            "they": "illi-sha", "them": "illi-sha", "their": "illi-sha",
             "the": "to-sha", "a": "a-sha", "an": "a-sha",
             "friend": "philos", "twin": "philos", "buddy": "philos",
             "cat": "katos", "kitty": "katos",
             "dog": "skylos", "dawg": "skylos",
             "house": "domos", "home": "domos", "crib": "domos",
             "sun": "helios", "man": "andros", "dude": "andros",
-            "woman": "gyna", "girl": "gyna", "love": "agape-a",
+            "woman": "gyna", "girl": "gyna", 
+            "love": "agape-a",
             "food": "nomnos", "grub": "nomnos",
             "monkey": "munkos", "banana": "bananos",
             "queen": "regina", "king": "regos", "river": "rivos", "tree": "arboros",
@@ -219,26 +223,44 @@
         };
 
         // Pronoun lookup table for Pos-Sha to English translation
+        // Note: The lookup is only by the invariant Pos-Sha form.
         const pronounCases = {
             "ego-sha": { subject: "I", object: "me", possessive: "my" },
             "tu-sha": { subject: "you", object: "you", possessive: "your" },
-            "iso-sha": { subject: "it", object: "it", possessive: "its" }, // Simplification
-            "nos-sha": { subject: "we", object: "us", possessive: "our" }
+            "iso-sha": { subject: "he", object: "him", possessive: "his" }, 
+            "nos-sha": { subject: "we", object: "us", possessive: "our" },
+            "illi-sha": { subject: "they", object: "them", possessive: "their" },
+            "to-sha": { subject: "the", object: "the", possessive: "the" },
+            "a-sha": { subject: "a", object: "a", possessive: "a" }
         };
 
         // List of words that are usually followed by a possessive (Nouns)
         const possessiveWords = ["philos", "katos", "skylos", "domos", "helios", "andros", "gyna", "agape-a", "nomnos", "munkos", "bananos", "regina", "regos", "rivos", "arboros"]; 
         
-        // List of Verbs
+        // List of Verbs (ending in -o)
         const verbWords = ["esto", "fago", "vido", "bado", "filo", "lego", "salto-o", "kurro-o", "pugno-o"]; 
 
         // Generate Reverse Dictionary (Pos-Sha -> English)
+        // This is complex because one Pos-Sha word maps to multiple English words (e.g., ego-sha -> i, me, my).
+        // For words NOT in pronounCases, we want the simple root.
         const reverseDictionary = {};
         for (const [eng, pos] of Object.entries(dictionary)) {
-            if (!reverseDictionary[pos]) {
-                reverseDictionary[pos] = eng;
+            // If the Pos-Sha word is NOT an invariant pronoun, store the primary English word.
+            if (!pronounCases[pos]) {
+                // If it's a suffix word (like philos, agape-a), we want to store the root word (friend, love).
+                const englishRoot = reverseDictionary[pos];
+                if (!englishRoot || (eng.length < englishRoot.length && eng.length > 2)) {
+                    // Prioritize shorter, common roots (e.g., 'friend' over 'twin')
+                    reverseDictionary[pos] = eng;
+                }
             }
         }
+        
+        // Explicitly set the few female nouns we have to ensure they work
+        reverseDictionary["gyna"] = "woman"; // gyna is an exception, it's not gyna-a
+        reverseDictionary["agape-a"] = "love";
+        reverseDictionary["regina"] = "queen";
+
 
         // --- DOM ELEMENTS ---
         const inputs = {
@@ -291,7 +313,6 @@
                 processedText = processedText.replace(new RegExp(phrase, 'gi'), translation);
             }
 
-            // Using the new regex to properly tokenize words and separators
             const tokens = text.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
             let translatedTokens = tokens.map(token => {
@@ -335,55 +356,40 @@
 
                 // Check if the current token is a word
                 if (/\w+/.test(token)) {
-                    // 1. Handle invariant pronouns
+                    
+                    // --- 1. Handle invariant pronouns (contextual cases) ---
                     if (pronounCases[cleanWord]) {
                         let pronounData = pronounCases[cleanWord];
                         let englishWord = pronounData.subject; // Default to Subject Case
 
-                        // Get indices of neighboring words in the wordsOnly array
                         const nextWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, 1);
                         const prevWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, -1);
                         
                         const nextWord = nextWordOnlyIndex !== null ? wordsOnly[nextWordOnlyIndex].toLowerCase() : null;
                         const prevWord = prevWordOnlyIndex !== null ? wordsOnly[prevWordOnlyIndex].toLowerCase() : null;
-
                         
+                        // Rule 1: Possessive Case (followed by a possessable noun)
                         if (nextWord && possessiveWords.includes(nextWord)) {
-                            // Case 1: Possessive (e.g., ego-sha philos -> my friend)
                             englishWord = pronounData.possessive;
-                        } else if (prevWord && verbWords.includes(prevWord) && !nextWord) {
-                            // Case 2: Object at the end (e.g., vido ego-sha -> see me)
+                        
+                        // Rule 2: Objective Case (preceded by a verb and *not* followed by a word starting the next clause)
+                        // A simpler rule: if preceded by a verb and is not the first word of the sentence/clause.
+                        } else if (prevWord && verbWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
                             englishWord = pronounData.object;
-                        } else if (prevWord && verbWords.includes(prevWord) && nextWord && !verbWords.includes(nextWord)) {
-                            // Case 3: Object after verb and followed by a non-verb (This handles indirect objects if the language structure allows)
-                            // Given the simple nature, we'll keep it simple: if preceded by a verb and followed by ANYTHING, it's likely an object or subject of a new clause.
-                            // To cover "vido ego-sha" where the verb comes before, we stick to the simpler end-of-sentence check above, or default to Subject unless it's Possessive.
-                            // We rely mostly on the possessive check and the end-of-sentence object check.
-                            
-                            // Let's refine the Object check to be slightly broader for sentences like "I see you" where the object is the last word.
-                            // For simplicity, if it's not possessive and not a clear subject (start of sentence or after punctuation), it might be an object.
-                            
-                            // Since the logic needs to be simple, let's prioritize Subject (default), Possessive (followed by noun), then Object (followed by nothing, and preceded by verb).
-                            // The current logic works for the provided examples:
-                            // "ego-sha philos" -> Possessive ("my")
-                            // "ego-sha vido ego-sha" -> 1st is Subject ("I"), 2nd is Object ("me")
-                            // "ego-sha vido ego-sha philos" -> 1st is Subject ("I"), 2nd is Possessive ("my")
-                            
-                            // Let's stick to the Subject/Possessive/Object at End logic as it covers the examples.
-                        }
+                        } 
                         
                         translatedTokens.push(englishWord);
-                        wordOnlyIndex++; // Move to the next word in the wordsOnly array
+                        wordOnlyIndex++; 
                         continue;
                     
-                    // 2. Handle standard words
+                    // --- 2. Handle all other mapped words (nouns, verbs, adjectives, conjunctions) ---
                     } else if (reverseDictionary[cleanWord]) {
                         translatedTokens.push(reverseDictionary[cleanWord]);
                         wordOnlyIndex++;
                         continue;
                     }
 
-                    // 3. Check for pos...ti (Unknown word wrapper)
+                    // --- 3. Check for pos...ti (Unknown word wrapper) ---
                     const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
                     if (posTiMatch) {
                         translatedTokens.push(posTiMatch[1]); // Return the inner word
@@ -401,6 +407,7 @@
                 }
             }
 
+            // Apply capitalization to the *translated* English words
             return formatCase(translatedTokens.join(''));
         }
 
