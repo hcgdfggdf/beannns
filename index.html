@@ -66,7 +66,7 @@
                 🏛️
             </div>
             <h1 class="text-3xl md:text-4xl font-ancient font-bold text-slate-900 tracking-tight">Pos-Sha</h1>
-            <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project. Pos-sha to english might be incorrect use vocab list if its wrong</p>
+            <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project. Now with Mega-Sha Vocab!</p>
         </div>
         
         <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior: 'smooth'})" 
@@ -94,7 +94,7 @@
                 <textarea 
                     id="input-text" 
                     class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none placeholder-slate-300 outline-none text-slate-700 leading-relaxed"
-                    placeholder="Type here..."
+                    placeholder="Type your thoughts here, twin..."
                     spellcheck="false"
                 ></textarea>
             </div>
@@ -158,7 +158,8 @@
                 
                 <div class="overflow-y-auto custom-scroll pr-2">
                     <div class="grid grid-cols-2 gap-2 text-sm" id="vocab-list">
-                        </div>
+                        <!-- Vocab list populated by JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,54 +177,127 @@
     <script>
         // --- DATA ---
         const dictionary = {
-            "i": "ego-sha", "me": "ego-sha", "my": "ego-sha",
-            "you": "tu-sha", "your": "tu-sha",
+            // --- PRONOUNS & ARTICLES (CORE) ---
+            "i": "ego-sha", "me": "ego-sha", "my": "ego-sha", "mine": "ego-sha",
+            "you": "tu-sha", "your": "tu-sha", "yours": "tu-sha",
             "he": "iso-sha", "him": "iso-sha", "his": "iso-sha",
-            "she": "iso-sha", "her": "iso-sha", 
+            "she": "iso-sha", "her": "iso-sha", "hers": "iso-sha",
             "it": "iso-sha", "its": "iso-sha",
-            "we": "nos-sha", "us": "nos-sha", "our": "nos-sha",
-            "they": "illi-sha", "them": "illi-sha", "their": "illi-sha",
+            "we": "nos-sha", "us": "nos-sha", "our": "nos-sha", "ours": "nos-sha",
+            "they": "illi-sha", "them": "illi-sha", "their": "illi-sha", "theirs": "illi-sha",
+            "this": "hic-sha", "that": "ille-sha", "these": "hic-sha", "those": "ille-sha",
+            "who": "quis-sha", "what": "quid-sha", "where": "ubi-sha",
             "the": "to-sha", "a": "a-sha", "an": "a-sha",
-            "friend": "philos", "homie": "philos", "buddy": "philos",
+            "some": "aliquis-sha", "many": "multi-sha", "much": "multi-sha",
+            "one": "uno-sha", "two": "duo-sha", "three": "tres-sha",
+
+            // --- COMMON NOUNS (MASC/NEUTER: -os) ---
+            "friend": "philos", "homie": "philos", "buddy": "philos", "twin": "philos",
             "cat": "katos", "kitty": "katos",
-            "dog": "skylos", "dawg": "skylos",
-            "house": "domos", "home": "domos", "crib": "domos",
-            "sun": "helios", "man": "andros", "dude": "andros",
-            "woman": "gyna", "girl": "gyna", 
-            "love": "agape-a",
-            "food": "nomnos", "grub": "nomnos",
+            "dog": "skylos", "dawg": "skylos", "pup": "skylos",
+            "house": "domos", "home": "domos", "crib": "domos", "building": "domos",
+            "sun": "helios", "star": "astros", "moon": "selenos",
+            "man": "andros", "dude": "andros", "guy": "andros",
+            "boy": "pais-m", "son": "pais-m",
+            "food": "nomnos", "grub": "nomnos", "meal": "nomnos",
             "monkey": "munkos", "banana": "bananos",
-            "queen": "regina", "king": "regos", "river": "rivos", "tree": "arboros",
-            "is": "esto", "am": "esto", "are": "esto", "be": "esto",
-            "eat": "fago", "ate": "fago",
-            "see": "vido", "saw": "vido",
-            "go": "bado", "went": "bado",
-            "like": "filo",
-            "speak": "lego", "say": "lego", "said": "lego",
-            "jump": "salto-o", "run": "kurro-o", "fight": "pugno-o",
-            "big": "mega-sha", "huge": "mega-sha",
-            "small": "mikro-sha", "lil": "mikro-sha",
-            "good": "kalo-sha", "great": "kalo-sha",
-            "bad": "kako-sha", "happy": "hapi-sha",
-            "fast": "tacho-sha", "quick": "tacho-sha",
-            "red": "rudo-sha", "blue": "bluo-sha",
+            "river": "rivos", "ocean": "maros", "sea": "maros",
+            "tree": "arboros", "wood": "lignos", "forest": "silvos",
+            "water": "hydros", "air": "aeros", "fire": "pyros", "earth": "geos",
+            "time": "chronos", "day": "hemeros", "night": "noctos", "life": "bios",
+            "death": "thanatos", "name": "nomenos", "place": "topos",
+            "work": "ergos", "money": "nummos", "cash": "nummos",
+            "city": "polis", "town": "polis",
+            "problem": "malos", "thing": "kosmos", "object": "kosmos",
+            "mind": "psykhos", "heart": "kardios", "body": "somatos",
+            "magic": "magos", "spell": "magos", "god": "theos",
+
+            // --- COMMON NOUNS (FEMININE: -a) ---
+            "woman": "gyna", "girl": "gyna", "lady": "gyna", 
+            "love": "agape-a", "affection": "agape-a",
+            "queen": "regina", "princess": "regina-a",
+            "hand": "cheir-a", "foot": "pod-a",
+            "story": "myth-a", "tale": "myth-a",
+            "freedom": "liber-a", "liberty": "liber-a",
+            "idea": "concept-a", "thought": "concept-a",
+
+            // --- VERBS (INFINITIVE: -o) ---
+            "is": "esto", "am": "esto", "are": "esto", "be": "esto", "was": "esto", "were": "esto",
+            "eat": "fago", "ate": "fago", "to eat": "fago",
+            "see": "vido", "saw": "vido", "to see": "vido",
+            "go": "bado", "went": "bado", "to go": "bado",
+            "like": "filo", "loved": "filo", "to like": "filo",
+            "speak": "lego", "say": "lego", "said": "lego", "to speak": "lego",
+            "jump": "salto-o", "to jump": "salto-o",
+            "run": "kurro-o", "to run": "kurro-o",
+            "fight": "pugno-o", "to fight": "pugno-o",
+            "do": "facio-o", "make": "facio-o", "did": "facio-o",
+            "come": "venio-o", "came": "venio-o",
+            "take": "capio-o", "took": "capio-o",
+            "give": "dono-o", "gave": "dono-o",
+            "walk": "ambulo-o", "sleep": "hypno-o",
+            "know": "scio-o", "understand": "scio-o",
+            "want": "volo-o", "need": "volo-o",
+            "hear": "audio-o", "listen": "audio-o",
+            "help": "iuvo-o", "assist": "iuvo-o",
+            "think": "cogito-o", "thought": "cogito-o",
+            "play": "ludo-o", "game": "ludo-o",
+
+            // --- ADJECTIVES & ADVERBS (-sha) ---
+            "big": "mega-sha", "huge": "mega-sha", "large": "mega-sha",
+            "small": "mikro-sha", "lil": "mikro-sha", "tiny": "mikro-sha",
+            "good": "kalo-sha", "great": "kalo-sha", "well": "kalo-sha",
+            "bad": "kako-sha", "evil": "kako-sha", "poorly": "kako-sha",
+            "happy": "hapi-sha", "joyful": "hapi-sha",
+            "sad": "luget-sha", "unhappy": "luget-sha",
+            "fast": "tacho-sha", "quick": "tacho-sha", "quickly": "tacho-sha",
+            "slow": "brady-sha", "slowly": "brady-sha",
+            "old": "vetus-sha", "ancient": "vetus-sha",
+            "new": "neos-sha", "fresh": "neos-sha",
+            "hot": "thermo-sha", "cold": "kryo-sha",
+            "full": "plen-sha", "empty": "vacu-sha",
+            "strong": "potens-sha", "weak": "impotens-sha",
+            "beautiful": "bellus-sha", "pretty": "bellus-sha",
+            "ugly": "turpis-sha", "difficult": "difficil-sha", "easy": "facil-sha",
+            "here": "hic-locus-sha", "there": "illic-locus-sha",
+            "now": "nunc-sha", "then": "tunc-sha", "always": "semper-sha",
+            "never": "numquam-sha", "sure": "certus-sha", "certainly": "certus-sha",
+            "maybe": "fortasse-sha",
+
+            // --- CONJUNCTIONS & PREPOSITIONS (-sha) ---
             "no": "ne-sha", "not": "ne-sha", "nah": "ne-sha",
-            "yes": "ya-sha", "yeah": "ya-sha",
+            "yes": "ya-sha", "yeah": "ya-sha", "yep": "ya-sha",
             "all": "panto-sha", "everything": "panto-sha",
-            "let's": "nos-sha", "hello": "hello-sha", "hi": "hello-sha", "yo": "hello-sha",
             "and": "et-sha", "but": "sed-sha", "or": "vel-sha",
-            "for": "pro-sha", "on": "sur-sha", "in": "in-sha", "with": "cum-sha"
+            "for": "pro-sha", "on": "sur-sha", "in": "in-sha", "with": "cum-sha",
+            "of": "de-sha", "from": "de-sha", "to": "ad-sha",
+            "at": "apud-sha", "up": "supra-sha", "down": "infra-sha",
+            "because": "quia-sha", "if": "si-sha", "when": "quando-sha",
+            "how": "quomodo-sha",
+
+            // --- COLORS (-sha) ---
+            "red": "rudo-sha", "blue": "bluo-sha",
+            "green": "virid-sha", "yellow": "flavus-sha",
+            "black": "nigrum-sha", "white": "album-sha",
+
+            // --- GREETINGS & SLANG ---
+            "hello": "hello-sha", "hi": "hello-sha", "yo": "hello-sha",
+            "bye": "vale-sha", "peace": "pax-sha",
+            "let's": "nos-sha", 
+            "dope": "kalo-sha", "lit": "kalo-sha"
         };
 
         const phrases = {
             "my bad": "ego-sha kako-sha",
             "let's go": "nos-sha bado",
-            "it's all good": "panto-sha kalo-sha",
-            "all good": "panto-sha kalo-sha"
+            "it's all good": "iso-sha panto-sha kalo-sha",
+            "all good": "panto-sha kalo-sha",
+            "i love you": "ego-sha filo tu-sha",
+            "i know": "ego-sha scio-o",
+            "peace out": "vale-sha pax-sha"
         };
 
         // Pronoun lookup table for Pos-Sha to English translation
-        // Note: The lookup is only by the invariant Pos-Sha form.
         const pronounCases = {
             "ego-sha": { subject: "I", object: "me", possessive: "my" },
             "tu-sha": { subject: "you", object: "you", possessive: "your" },
@@ -231,36 +305,49 @@
             "nos-sha": { subject: "we", object: "us", possessive: "our" },
             "illi-sha": { subject: "they", object: "them", possessive: "their" },
             "to-sha": { subject: "the", object: "the", possessive: "the" },
-            "a-sha": { subject: "a", object: "a", possessive: "a" }
+            "a-sha": { subject: "a", object: "a", possessive: "a" },
+            "hic-sha": { subject: "this", object: "this", possessive: "this" },
+            "ille-sha": { subject: "that", object: "that", possessive: "that" }
         };
 
-        // List of words that are usually followed by a possessive (Nouns)
-        const possessiveWords = ["philos", "katos", "skylos", "domos", "helios", "andros", "gyna", "agape-a", "nomnos", "munkos", "bananos", "regina", "regos", "rivos", "arboros"]; 
-        
+        // List of words that are usually followed by a possessive (Nouns ending in -os or -a)
+        const possessiveWords = [
+            "philos", "katos", "skylos", "domos", "helios", "astros", "selenos", "andros", "pais-m",
+            "nomnos", "munkos", "bananos", "rivos", "maros", "arboros", "lignos", "silvos",
+            "hydros", "aeros", "pyros", "geos", "chronos", "hemeros", "noctos", "bios",
+            "thanatos", "nomenos", "topos", "ergos", "nummos", "polis", "malos", "kosmos",
+            "psykhos", "kardios", "somatos", "magos", "theos",
+            "gyna", "agape-a", "regina", "regina-a", "cheir-a", "pod-a", "myth-a", "liber-a", "concept-a"
+        ];
+
         // List of Verbs (ending in -o)
-        const verbWords = ["esto", "fago", "vido", "bado", "filo", "lego", "salto-o", "kurro-o", "pugno-o"]; 
+        const verbWords = [
+            "esto", "fago", "vido", "bado", "filo", "lego",
+            "salto-o", "kurro-o", "pugno-o", "facio-o", "venio-o", "capio-o",
+            "dono-o", "ambulo-o", "hypno-o", "scio-o", "volo-o", "audio-o",
+            "iuvo-o", "cogito-o", "ludo-o"
+        ];
 
         // Generate Reverse Dictionary (Pos-Sha -> English)
-        // This is complex because one Pos-Sha word maps to multiple English words (e.g., ego-sha -> i, me, my).
-        // For words NOT in pronounCases, we want the simple root.
         const reverseDictionary = {};
         for (const [eng, pos] of Object.entries(dictionary)) {
             // If the Pos-Sha word is NOT an invariant pronoun, store the primary English word.
             if (!pronounCases[pos]) {
-                // If it's a suffix word (like philos, agape-a), we want to store the root word (friend, love).
-                const englishRoot = reverseDictionary[pos];
-                if (!englishRoot || (eng.length < englishRoot.length && eng.length > 2)) {
-                    // Prioritize shorter, common roots (e.g., 'friend' over 'twin')
+                // Prioritize shorter, common roots
+                const currentRoot = reverseDictionary[pos];
+                if (!currentRoot || (eng.length < currentRoot.length && eng.length > 2) || (["i", "you", "he", "she", "it", "we", "they", "the", "a", "an"].includes(eng))) {
                     reverseDictionary[pos] = eng;
                 }
             }
         }
         
-        // Explicitly set the few female nouns we have to ensure they work
-        reverseDictionary["gyna"] = "woman"; // gyna is an exception, it's not gyna-a
+        // Explicitly set some common or key roots
+        reverseDictionary["gyna"] = "woman"; 
+        reverseDictionary["pais-m"] = "boy";
         reverseDictionary["agape-a"] = "love";
         reverseDictionary["regina"] = "queen";
-
+        reverseDictionary["scio-o"] = "know"; 
+        reverseDictionary["facio-o"] = "do"; 
 
         // --- DOM ELEMENTS ---
         const inputs = {
@@ -285,15 +372,18 @@
         let isEnglishToPosSha = true;
 
         // --- INIT VOCAB UI ---
+        // Expanded starter pack for the UI
         const starterPack = {
-            "I / Me": "ego-sha", "You": "tu-sha", "He/She/It": "iso-sha", "We": "nos-sha",
-            "The": "to-sha", "Friend": "philos", "Cat": "katos", "Dog": "skylos",
-            "House": "domos", "Love": "agape-a", "Food": "nomnos", "To Be": "esto",
-            "To Eat": "fago", "To See": "vido", "To Go": "bado", "Big": "mega-sha",
-            "Small": "mikro-sha", "Good": "kalo-sha", "Bad": "kako-sha", "Happy": "hapi-sha",
-            "No/Not": "ne-sha", "Yes": "ya-sha", "Hello": "hello-sha"
+            "I/Me/My": "ego-sha", "You/Your": "tu-sha", "He/She/It": "iso-sha", "We/Us": "nos-sha",
+            "The/A": "to-sha/a-sha", "Friend/Homie": "philos", "Dog/Dawg": "skylos", "House/Home": "domos",
+            "Love": "agape-a", "Food": "nomnos", "Time": "chronos", "To Be": "esto",
+            "To Eat": "fago", "To Go": "bado", "To Know": "scio-o", "Big": "mega-sha",
+            "Small": "mikro-sha", "Good": "kalo-sha", "Bad": "kako-sha", "No/Not": "ne-sha", 
+            "Yes": "ya-sha", "Hello": "hello-sha", "And": "et-sha", "With": "cum-sha"
         };
 
+        // Clear existing list and populate with the expanded starter pack
+        inputs.vocabList.innerHTML = '';
         for (const [eng, eos] of Object.entries(starterPack)) {
             const div = document.createElement('div');
             div.className = "flex justify-between border-b border-slate-100 py-1.5 hover:bg-slate-50 px-1 rounded transition-colors";
@@ -308,42 +398,52 @@
             if (!text.trim()) return "";
             let processedText = text.toLowerCase();
             
-            // Phrases
+            // Phrases (Handle multi-word phrases first)
             for (const [phrase, translation] of Object.entries(phrases)) {
-                processedText = processedText.replace(new RegExp(phrase, 'gi'), translation);
+                // Use word boundary \b to avoid matching 'my bad' inside a word like 'something my bad something'
+                processedText = processedText.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), translation);
             }
 
-            const tokens = text.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
+            // Tokenize by splitting words, spaces, and punctuation
+            const tokens = processedText.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
             let translatedTokens = tokens.map(token => {
+                // If token is just punctuation or space, return it unchanged
                 if (/^[\s\p{P}]+$/u.test(token)) return token; 
+                
                 const cleanWord = token.toLowerCase();
                 
+                // Check dictionary for exact match 
                 if (dictionary[cleanWord]) return dictionary[cleanWord];
+                
+                // Handle plurals (simple -s pluralization check)
                 if (cleanWord.endsWith('s')) {
                     const singular = cleanWord.slice(0, -1);
                     if (dictionary[singular]) return dictionary[singular];
                 }
+                
+                // Default: Unknown word wrapper
                 return `pos${cleanWord}ti`;
             });
 
+            // Re-apply proper casing to the resulting Pos-Sha sentence
             return formatCase(translatedTokens.join(''));
         }
 
-        // 2. Pos -> Eng (FIXED AND REFINED LOGIC HERE)
+        // 2. Pos -> Eng (Contextual lookup)
         function translateToEnglish(text) {
             if (!text.trim()) return "";
             
-            // Re-tokenizing with word boundaries to ensure we get a list of words only
+            // Get a list of *only* the words to check context for pronouns
             const wordsOnly = text.match(/\b\w+\b/g) || [];
             
-            // We need a list of ALL tokens (words, spaces, punctuation) to rebuild the sentence
+            // Get a list of ALL tokens (words, spaces, punctuation) to rebuild the sentence
             const rawTokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
             let translatedTokens = [];
 
             // Helper to find the index of the next or previous *word* in the wordsOnly array
-            const findWordIndexInWordsOnly = (wordIndex, step) => {
-                let index = wordIndex + step;
+            const findWordIndexInWordsOnly = (wordOnlyIndex, step) => {
+                let index = wordOnlyIndex + step;
                 return (index >= 0 && index < wordsOnly.length) ? index : null;
             };
 
@@ -372,8 +472,7 @@
                         if (nextWord && possessiveWords.includes(nextWord)) {
                             englishWord = pronounData.possessive;
                         
-                        // Rule 2: Objective Case (preceded by a verb and *not* followed by a word starting the next clause)
-                        // A simpler rule: if preceded by a verb and is not the first word of the sentence/clause.
+                        // Rule 2: Objective Case (preceded by a verb and *not* followed by a verb/start of new clause)
                         } else if (prevWord && verbWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
                             englishWord = pronounData.object;
                         } 
@@ -472,7 +571,13 @@
         inputs.copy.addEventListener('click', () => {
             if (!inputs.output.value) return;
             inputs.output.select();
-            document.execCommand('copy');
+            // Use modern clipboard API if available, fallback to execCommand
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(inputs.output.value);
+            } else {
+                document.execCommand('copy');
+            }
+
             const toast = document.getElementById('toast');
             toast.classList.remove('opacity-0', 'translate-y-[-20px]');
             setTimeout(() => toast.classList.add('opacity-0', 'translate-y-[-20px]'), 2000);
@@ -488,7 +593,10 @@
                 case 'verb': suffix = "o"; break;
                 case 'other': suffix = "sha"; break;
             }
-            inputs.forgeOut.textContent = root + suffix;
+            // Simple sanitization to remove common punctuation/spaces for the root
+            const cleanRoot = root.replace(/[^a-z0-9]/g, ''); 
+            
+            inputs.forgeOut.textContent = cleanRoot + suffix;
             inputs.forgeRes.classList.remove('hidden');
         });
 
@@ -497,6 +605,13 @@
             else inputs.backToTop.classList.remove('visible');
         });
 
+        // Initial focus on load
+        window.addEventListener('load', () => {
+            inputs.main.focus();
+            inputs.main.placeholder = "Type your thoughts here, twin...";
+        });
+
     </script>
 </body>
 </html>
+
