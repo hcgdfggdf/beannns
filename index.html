@@ -3,182 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pos-Sha</title>
+    <title>Pos-Sha: Lexical Augmentation Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #f8fafc;
-            --accent: #d97706; /* Amber 600 */
+            --accent: #d97706; /* Amber 600: The Saffron Hue of Pos-Sha */
         }
         
+        /* Ensures smooth transitional displacement for inter-page navigation */
         html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Manrope', sans-serif;
             background-color: var(--bg-color);
+            /* Subtly textured background using a radial grid for visual depth */
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 32px 32px;
-            color: #1e293b;
+            color: #1e293b; /* A profound, dark slate hue */
         }
+        /* Designates elements utilizing the Cinzel typeface for an archaic aesthetic */
         .font-ancient { font-family: 'Cinzel', serif; }
         
+        /* The 'Frosted Pane' Effect: Imparting a delicate transparency and depth */
         .glass-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
         }
+        /* Input Field State Transitions: Ensuring responsive and visual feedback */
         .input-area { transition: all 0.3s ease; }
         .input-area:focus-within {
             background: white;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.05); /* Enhanced inner shadow */
         }
         
-        /* Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        /* Custom Scrollbar Stylization for Aesthetically Pleasing Overflow */
+        .custom-scroll::-webkit-scrollbar { width: 8px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 10px; border: 2px solid var(--bg-color); }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
-        /* Animations */
+        /* Dynamic Presentation Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-fade { animation: fadeIn 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
+        /* Elevation Control for the Back-to-Top Mechanism */
         .back-to-top {
-            opacity: 0; transform: translateY(20px); pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0; transform: translateY(25px); pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
 
-        /* Swap Button Animation */
+        /* The Lexical Reversal Toggle: A deliberate rotational transformation */
         .rotate-180-smooth { transform: rotate(180deg); }
     </style>
 </head>
-<body id="top" class="min-h-screen flex flex-col items-center py-12 px-4 selection:bg-amber-100 selection:text-amber-900 relative">
+<body id="top" class="min-h-screen flex flex-col items-center py-16 px-6 selection:bg-amber-200 selection:text-amber-900 relative">
 
-    <header class="text-center mb-10 animate-fade w-full max-w-4xl flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+    <header class="text-center mb-12 animate-fade w-full max-w-5xl flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
         <div class="text-center md:text-left">
-            <div class="inline-flex items-center justify-center w-12 h-12 bg-slate-900 text-amber-400 rounded-xl shadow-lg mb-2 text-2xl">
-                🏛️
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-slate-900 text-amber-400 rounded-xl shadow-2xl mb-3 text-3xl transform rotate-3">
+                📜
             </div>
-            <h1 class="text-3xl md:text-4xl font-ancient font-bold text-slate-900 tracking-tight">Pos-Sha</h1>
-            <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project. Now with New Vocab!</p>
+            <h1 class="text-4xl md:text-5xl font-ancient font-extrabold text-slate-900 tracking-tighter">Pos-Sha: The Lexeme Engine</h1>
+            <p class="text-slate-600 text-sm font-extrabold tracking-[0.3em] uppercase mt-1">The Posti-Sharron Linguistic Augmentation Project</p>
         </div>
         
-        <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior: 'smooth'})" 
-                class="group flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
-            <span class="text-xs font-bold text-slate-600 group-hover:text-amber-600 uppercase tracking-wide">Vocab List</span>
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-500 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        <button onclick="document.getElementById('lexicon-compendium').scrollIntoView({behavior: 'smooth'})" 
+                class="group flex items-center gap-3 px-6 py-2.5 bg-white border border-slate-300 rounded-full shadow-lg hover:shadow-xl hover:border-amber-400 transition-all duration-300 transform hover:-translate-y-0.5">
+            <span class="text-sm font-extrabold text-slate-700 group-hover:text-amber-700 uppercase tracking-widest">Compendium Access</span>
+            <svg class="w-5 h-5 text-slate-500 group-hover:text-amber-600 transform group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
     </header>
 
-    <main class="w-full max-w-4xl space-y-8 animate-fade" style="animation-delay: 0.1s;">
+    <main class="w-full max-w-5xl space-y-10 animate-fade" style="animation-delay: 0.15s;">
         
-        <div class="flex justify-center items-center mb-[-20px] z-10 relative">
-            <button id="swap-mode-btn" class="bg-slate-900 hover:bg-amber-500 text-amber-400 hover:text-white p-3 rounded-full shadow-lg transition-all hover:scale-110 active:rotate-180 duration-300 group">
-                <svg class="w-5 h-5 transition-transform duration-500" id="swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+        <div class="flex justify-center items-center mb-[-30px] z-20 relative">
+            <button id="swap-mode-btn" 
+                    title="Toggle Translation Direction"
+                    class="bg-slate-900 hover:bg-amber-600 text-amber-400 hover:text-white p-4 rounded-full shadow-2xl transition-all duration-500 transform hover:scale-115 active:rotate-180 group">
+                <svg class="w-6 h-6 transition-transform duration-700" id="swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
             </button>
         </div>
 
-        <div class="glass-card rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row min-h-[400px]">
+        <div class="glass-card rounded-[2rem] overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[480px]">
             
-            <div class="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 input-area bg-slate-50/50">
-                <div class="px-6 py-4 flex justify-between items-center">
-                    <span id="input-label" class="text-xs font-bold text-slate-400 uppercase tracking-widest transition-all">English</span>
-                    <button id="clear-btn" class="text-slate-300 hover:text-red-400 transition-colors text-xs font-bold uppercase">Clear</button>
+            <div class="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-slate-200 input-area bg-slate-50/70">
+                <div class="px-8 py-5 flex justify-between items-center bg-slate-100/30">
+                    <span id="input-label" class="text-sm font-extrabold text-slate-500 uppercase tracking-[0.2em] transition-all">Source Lexicon (English)</span>
+                    <button id="clear-btn" class="text-slate-400 hover:text-red-500 transition-colors text-xs font-bold uppercase tracking-widest">Purge Text</button>
                 </div>
                 <textarea 
                     id="input-text" 
-                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none placeholder-slate-300 outline-none text-slate-700 leading-relaxed"
-                    placeholder="Type your thoughts here, twin..."
+                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-8 text-xl resize-none placeholder-slate-300 outline-none text-slate-800 leading-relaxed custom-scroll"
+                    placeholder="Inscribe your discourse for linguistic transposition, twin..."
                     spellcheck="false"
                 ></textarea>
             </div>
 
-            <div class="flex-1 flex flex-col bg-white/60 relative">
-                <div class="px-6 py-4 flex justify-between items-center">
-                    <span id="output-label" class="text-xs font-bold text-amber-600 uppercase tracking-widest transition-all">Pos-Sha</span>
+            <div class="flex-1 flex flex-col bg-white/80 relative">
+                <div class="px-8 py-5 flex justify-between items-center bg-white/50">
+                    <span id="output-label" class="text-sm font-extrabold text-amber-700 uppercase tracking-[0.2em] transition-all">Target Lexicon (Pos-Sha)</span>
                     <div class="flex gap-2">
-                        <span class="h-2 w-2 rounded-full bg-red-400"></span>
-                        <span class="h-2 w-2 rounded-full bg-amber-400"></span>
-                        <span class="h-2 w-2 rounded-full bg-green-400"></span>
+                        <span class="h-3 w-3 rounded-full bg-red-500 shadow-inner"></span>
+                        <span class="h-3 w-3 rounded-full bg-amber-500 shadow-inner"></span>
+                        <span class="h-3 w-3 rounded-full bg-green-500 shadow-inner"></span>
                     </div>
                 </div>
                 <textarea 
                     id="output-text" 
                     readonly
-                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-800 font-ancient font-medium leading-relaxed"
-                    placeholder="..."
+                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-8 text-xl resize-none outline-none text-slate-900 font-ancient font-semibold leading-relaxed custom-scroll"
+                    placeholder="Awaiting Transposition..."
                 ></textarea>
                 
-                <div class="absolute bottom-6 right-6">
-                    <button id="copy-btn" class="group flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full transition-all hover:shadow-lg active:scale-95">
-                        <span class="text-sm font-bold">Copy</span>
-                        <svg class="w-4 h-4 text-amber-400 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                <div class="absolute bottom-8 right-8">
+                    <button id="copy-btn" 
+                            title="Commit Transposed Text to Clipboard"
+                            class="group flex items-center gap-2 bg-slate-900 hover:bg-slate-700 text-white px-6 py-3 rounded-full transition-all duration-200 hover:shadow-xl active:scale-90">
+                        <span class="text-sm font-extrabold tracking-wider">Commit to Clipboard</span>
+                        <svg class="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="vocab-section" class="grid md:grid-cols-3 gap-6 scroll-mt-6" style="animation-delay: 0.2s;">
+        <div id="lexicon-compendium" class="grid md:grid-cols-3 gap-8 scroll-mt-24" style="animation-delay: 0.3s;">
             
-            <div class="glass-card rounded-3xl p-6 md:col-span-1 flex flex-col justify-center">
-                <h3 class="font-ancient font-bold text-lg text-slate-800 mb-1">Word Forger ⚒️</h3>
-                <p class="text-xs text-slate-400 mb-4">Create custom Pos-Sha words.</p>
+            <div class="glass-card rounded-3xl p-8 md:col-span-1 flex flex-col justify-center shadow-lg">
+                <h3 class="font-ancient font-bold text-xl text-slate-800 mb-2">Lexeme Synthesis Engine 🔬</h3>
+                <p class="text-xs text-slate-500 mb-5 tracking-wide">Generate **neologisms** and **conjugations** for the Pos-Sha lexicon.</p>
                 
-                <div class="space-y-3">
-                    <input type="text" id="forge-input" placeholder="Root (e.g. Teach)" class="w-full bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition-shadow">
+                <div class="space-y-4">
+                    <input type="text" id="forge-input" placeholder="Semantic Root (e.g. Educate)" class="w-full bg-slate-100 border-none rounded-xl px-5 py-2.5 text-sm focus:ring-4 focus:ring-amber-400 focus:ring-opacity-50 outline-none transition-shadow duration-300">
                     <div class="relative">
-                        <select id="forge-type" class="w-full appearance-none bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none text-slate-600 transition-shadow cursor-pointer">
-                            <option value="noun">Noun [-iz]</option>
-                            <option value="verb">Verb [-ek]</option>
-                            <option value="adj">Adjective/Adverb [-vum]</option>
-                            <option value="other">Other [-ril]</option>
+                        <select id="forge-type" class="w-full appearance-none bg-slate-100 border-none rounded-xl px-5 py-2.5 text-sm focus:ring-4 focus:ring-amber-400 focus:ring-opacity-50 outline-none text-slate-700 transition-shadow cursor-pointer">
+                            <option value="noun">Substantive [-iz] (Noun)</option>
+                            <option value="verb">Dynamic [-ek] (Verb)</option>
+                            <option value="adj">Qualitative [-vum] (Adjective/Adverb)</option>
+                            <option value="other">Particle [-ril] (Pronoun/Conjunction)</option>
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
                             <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                         </div>
                     </div>
-                    <button id="forge-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl transition-colors text-sm shadow-md hover:shadow-lg active:scale-95">Forge It</button>
-                    <div id="forge-result" class="text-center hidden pt-2">
-                        <span class="font-ancient text-lg text-slate-800 animate-pulse" id="forge-output"></span>
+                    <button id="forge-btn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-extrabold py-3 rounded-xl transition-colors text-sm shadow-xl hover:shadow-2xl active:scale-95 duration-200">Synthesize Lexeme</button>
+                    <div id="forge-result" class="text-center hidden pt-3 bg-amber-50/50 rounded-xl p-2">
+                        <span class="text-xs text-slate-500 block mb-1">Generated Pos-Sha Term</span>
+                        <span class="font-ancient text-xl text-slate-900 animate-pulse" id="forge-output"></span>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-card rounded-3xl p-6 md:col-span-2 overflow-hidden flex flex-col h-64 md:h-auto">
-                <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
-                    <h3 class="font-ancient font-bold text-lg text-slate-800">The Golden Rules</h3>
-                    <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Unknown = pos...ti</span>
+            <div class="glass-card rounded-3xl p-8 md:col-span-2 overflow-hidden flex flex-col h-[400px] md:h-auto shadow-lg">
+                <div class="flex justify-between items-baseline mb-5 border-b-2 border-slate-200 pb-3">
+                    <h3 class="font-ancient font-extrabold text-xl text-slate-800">The Comprehensive Pos-Sha Lexicon</h3>
+                    <span class="text-xs font-extrabold bg-slate-200 text-slate-600 px-3 py-1 rounded-full shadow-inner">Unmapped Term $\rightarrow$ **pos...ti**</span>
                 </div>
                 
-                <div class="overflow-y-auto custom-scroll pr-2">
-                    <div class="grid grid-cols-2 gap-2 text-sm" id="vocab-list">
+                <div class="overflow-y-auto custom-scroll pr-4 flex-1">
+                    <div class="grid grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3 text-base" id="vocab-list">
                         </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="back-to-top" class="back-to-top fixed bottom-8 right-8 bg-slate-900 text-amber-400 p-3 rounded-full shadow-xl hover:scale-110 transition-transform z-40">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="back-to-top" 
+            title="Return to the Summit"
+            class="back-to-top fixed bottom-10 right-10 bg-slate-900 text-amber-400 p-4 rounded-full shadow-2xl hover:scale-120 transition-transform duration-500 z-40">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
     </button>
 
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-[-20px] z-50">
-        <span class="text-amber-400 text-lg">✓</span>
-        <span class="font-medium text-sm">Copied to clipboard</span>
+    <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-3.5 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-400 ease-out opacity-0 translate-y-[-30px] z-50">
+        <span class="text-amber-400 text-xl">✅</span>
+        <span class="font-semibold text-sm tracking-wider">Transposition **Successfully** Committed to Clipboard!</span>
     </div>
 
     <script>
-        // --- DATA ---
-        // NEW SUFFIXES: -iz (Noun), -ek (Verb), -vum (Adjective/Adverb), -ril (Pronoun/Particle)
+        // --- LEXICAL DATA COMPENDIUM ---
+        // NEW SUFFIXES: -iz (Substantive/Noun), -ek (Dynamic/Verb), -vum (Qualitative/Adjective/Adverb), -ril (Particle/Pronoun/Conjunction)
 
-        const dictionary = {
-            // --- PRONOUNS & ARTICLES (-ril) ---
+        const lexicon = {
+            // --- PARTICLES & DETERMINERS (-ril) ---
             "i": "egoril", "me": "egoril", "my": "egoril", "mine": "egoril",
             "you": "turil", "your": "turil", "yours": "turil",
             "he": "isoril", "him": "isoril", "his": "isoril",
@@ -187,149 +200,145 @@
             "we": "nosril", "us": "nosril", "our": "nosril", "ours": "nosril",
             "they": "illiril", "them": "illiril", "their": "illiril", "theirs": "illiril",
             "this": "hicril", "that": "illeril", "these": "hicril", "those": "illeril",
-            "who": "quisril", "what": "quidril", "where": "ubiril",
+            "who": "quisril", "what": "quidril", "where": "ubiril", "why": "quaril",
             "the": "toril", "a": "aril", "an": "aril",
             "some": "alquiril", "many": "multiril", "much": "multiril",
-            "one": "unoril", "two": "duoril", "three": "tresril",
+            "one": "unoril", "two": "duoril", "three": "tresril", "four": "quadril", "five": "quinril",
+            "every": "omneril", "never": "numquamril", "always": "semperril",
+            "down": "subril", "up": "supraeril",
 
-            // --- COMMON NOUNS (-iz) ---
-            "friend": "zeniz", "homie": "zeniz", "buddy": "zeniz", "twin": "zeniz",
-            "cat": "katiz", "kitty": "katiz",
-            "dog": "kryguz", "dawg": "kryguz", "pup": "kryguz",
-            "house": "domiiz", "home": "domiiz", "crib": "domiiz", "building": "domiiz",
+            // --- SUBSTANTIVES (NOUNS: -iz) ---
+            "friend": "zeniz", "homie": "zeniz", "buddy": "zeniz", "twin": "zeniz", "ally": "zeniz",
+            "cat": "felinuz", "kitty": "felinuz",
+            "dog": "caniz", "dawg": "caniz", "pup": "caniz",
+            "house": "domiiz", "home": "domiiz", "residence": "domiiz", "structure": "aedifiz",
             "sun": "soliz", "star": "stelliz", "moon": "luniz",
-            "man": "hominiz", "dude": "hominiz", "guy": "hominiz",
-            "boy": "paiz", "son": "paiz",
-            "food": "shiniz", "grub": "shiniz", "meal": "shiniz",
-            "river": "riviz", "ocean": "mariz", "sea": "mariz",
-            "tree": "arbiz", "water": "hidriz", "air": "aeriz", "fire": "pyriz", "earth": "terriz",
-            "time": "tymeriz", "day": "luriz", "night": "noxiz", "life": "viviz",
-            "death": "moriz", "name": "nomiz", "place": "topiz",
-            "work": "ergiz", "money": "numiz", "cash": "numiz",
-            "city": "poliz", "problem": "maliz", "thing": "kosiz",
-            "mind": "psykiz", "heart": "kardiz", "body": "somiz",
-            "magic": "magiz", "god": "deiz",
+            "man": "hominiz", "individual": "personiz",
+            "boy": "paiz", "son": "paiz", "child": "infantiz",
+            "food": "victualiz", "sustenance": "alimentiz", "meal": "shiniz",
+            "river": "riviz", "ocean": "mariz", "sea": "mariz", "lake": "laciz",
+            "tree": "arbiz", "water": "hidriz", "air": "aeriz", "fire": "igniz", "earth": "terriz",
+            "time": "chroniz", "duration": "tempusiz", "day": "luriz", "night": "noxiz", "life": "viviz",
+            "death": "moriz", "name": "nomiz", "place": "topiz", "location": "lociz",
+            "work": "labiz", "labor": "ergiz", "money": "pecuniz", "cash": "numiz",
+            "city": "polisiz", "metropolis": "urbiz", "problem": "maliz", "difficulty": "dilemmiz",
+            "mind": "mentiz", "intellect": "psykiz", "heart": "kardiz", "emotion": "affectiz", "body": "somiz",
+            "magic": "arcanaiz", "god": "deiz", "deity": "theosiz",
             "woman": "gyniz", "girl": "gyniz", "lady": "gyniz", 
-            "love": "amiiz", "affection": "amiiz",
-            "queen": "regiz", "idea": "conceptiz", "thought": "conceptiz",
+            "love": "amiiz", "affection": "amiiz", "devotion": "pietiz",
+            "queen": "regiz", "ruler": "souvereniz", "idea": "conceptiz", "thought": "cogitiz",
+            "system": "systemiz", "theory": "theoriz", "knowledge": "scientiz",
 
-            // --- VERBS (INFINITIVE: -ek) ---
-            "is": "jestek", "am": "jestek", "are": "jestek", "be": "jestek", "was": "jestek", "were": "jestek",
-            "eat": "fodrek", "ate": "fodrek", "to eat": "fodrek",
-            "see": "vidrek", "saw": "vidrek", "to see": "vidrek",
-            "go": "badek", "went": "badek", "to go": "badek",
-            "like": "filtek", "loved": "filtek", "to like": "filtek",
-            "speak": "legrek", "say": "legrek", "said": "legrek", "to speak": "legrek",
-            "jump": "saltek", "to jump": "saltek",
-            "run": "kurrek", "to run": "kurrek",
-            "fight": "pugnek", "to fight": "pugnek",
-            "do": "facyek", "make": "facyek", "did": "facyek",
-            "come": "venyek", "came": "venyek",
-            "take": "capek", "took": "capek",
-            "give": "dontek", "gave": "dontek",
-            "walk": "ambulek", "sleep": "hypnek",
-            "know": "skiyek", "understand": "skiyek",
-            "want": "volek", "need": "volek",
-            "help": "juvlek", "assist": "juvlek",
-            "think": "cogtek", "thought": "cogtek",
-            "play": "ludek", "game": "ludek",
+            // --- DYNAMICS (VERBS: -ek) ---
+            "is": "estek", "am": "estek", "are": "estek", "be": "estek", "was": "estek", "were": "estek", "to be": "estek",
+            "eat": "comedek", "ingest": "fodrek", "to eat": "comedek",
+            "see": "vidrek", "observe": "spectek", "to see": "vidrek",
+            "go": "vadimek", "proceed": "badek", "to go": "vadimek",
+            "like": "dilegek", "cherish": "filtek", "to like": "dilegek",
+            "speak": "loquorvek", "articulate": "legrek", "to speak": "loquorvek",
+            "jump": "saltarex", "leap": "saltek", "to jump": "saltarex",
+            "run": "kurrek", "flee": "fugiek", "to run": "kurrek",
+            "fight": "pugnarex", "struggle": "pugnek", "to fight": "pugnarex",
+            "do": "faciek", "execute": "facyek", "make": "faciek",
+            "come": "venirex", "arrive": "venyek",
+            "take": "capiek", "acquire": "capek",
+            "give": "donarex", "bestow": "dontek",
+            "walk": "ambulek", "stroll": "vadimek", "sleep": "hypnek", "rest": "pausiek",
+            "know": "cognoscek", "comprehend": "skiyek", "understand": "intellegiek",
+            "want": "voluptek", "desire": "volek", "need": "necessiek",
+            "help": "juvlek", "assist": "auxiliek",
+            "think": "cogitatek", "reflect": "cogtek",
+            "play": "ludek", "engage": "ludek",
+            "learn": "discerek", "teach": "docek",
 
-            // --- ADJECTIVES & ADVERBS (-vum) ---
-            "big": "megavum", "huge": "megavum", "large": "megavum",
-            "small": "mikrovum", "lil": "mikrovum", "tiny": "mikrovum",
-            "good": "gudovum", "great": "gudovum", "well": "gudovum",
-            "bad": "kaklovum", "evil": "kaklovum", "poorly": "kaklovum",
-            "happy": "hapivum", "joyful": "hapivum",
-            "sad": "lugetvum", "unhappy": "lugetvum",
-            "fast": "tashovum", "quickly": "tashovum",
-            "slow": "bradovum", "slowly": "bradovum",
-            "old": "vetuvum", "new": "neovum",
-            "hot": "termovum", "cold": "kryovum",
-            "full": "plenvum", "empty": "vacuvum",
-            "strong": "potenvum", "weak": "impovum",
-            "beautiful": "belluvum", "ugly": "turpivum",
+            // --- QUALITATIVES (ADJECTIVES & ADVERBS: -vum) ---
+            "big": "maximalvum", "huge": "megavum", "vast": "grandivum",
+            "small": "minimalvum", "tiny": "mikrovum", "minute": "exiguuvum",
+            "good": "bonovum", "excellent": "gudovum", "well": "benignuvum",
+            "bad": "malumvum", "terrible": "kaklovum", "poorly": "deteriusvum",
+            "happy": "felicivum", "joyful": "hapivum", "merrily": "laetavum",
+            "sad": "lugetvum", "sorrowful": "tristivum",
+            "fast": "velocivum", "quickly": "tashovum", "rapidly": "celerivum",
+            "slow": "lentuvum", "slowly": "bradovum", "gradually": "tardivuvum",
+            "old": "vetustuvum", "ancient": "antiquuvum", "new": "neovum", "modern": "novelluvum",
+            "hot": "thermivuvum", "cold": "kryovum", "frigid": "glacialuvum",
+            "full": "plenitudvum", "empty": "vacuuvum",
+            "strong": "potentiavum", "mighty": "potenvum", "weak": "impotentvum", "feeble": "impovum",
+            "beautiful": "belluvum", "aesthetivuvum", "ugly": "turpivuvum", "deformed": "deformuvum",
+            "true": "verituvum", "false": "falsuvum",
 
             // --- CONJUNCTIONS & PREPOSITIONS (-ril) ---
-            "no": "noril", "not": "noril", "nah": "noril",
-            "yes": "yaril", "yeah": "yaril", "yep": "yaril",
-            "all": "pantaril", "everything": "pantaril",
-            "and": "enril", "but": "sedril", "or": "velril",
-            "for": "proril", "on": "surril", "in": "inril", "with": "cumril",
-            "of": "deril", "from": "deril", "to": "adril",
-            "because": "quiaril", "if": "siril", "when": "quandoril",
+            "no": "negativeril", "not": "noril", "nah": "noril",
+            "yes": "affirmatiril", "yeah": "yaril", "yep": "yaril",
+            "all": "pantaril", "everything": "omnesril",
+            "and": "etril", "moreover": "enril", "but": "sedril", "however": "autemril", "or": "velril",
+            "for": "proproril", "on": "superril", "in": "inril", "within": "intraeril", "with": "cumril",
+            "of": "deril", "from": "exril", "to": "adril", "toward": "versusril",
+            "because": "quiaril", "since": "quoniamril", "if": "siril", "when": "quandoril",
             "how": "quomoril",
 
             // --- GREETINGS & SLANG ---
-            "hello": "saluvum", "hi": "saluvum", "yo": "saluvum",
-            "bye": "valeril", "peace": "paxril",
+            "hello": "salutekril", "hi": "saluvum", "yo": "saluvum",
+            "bye": "valedixeril", "peace": "paxril", "farewell": "valeril",
             "let's": "nosril", 
-            "dope": "gudovum", "lit": "gudovum"
+            "dope": "magnificuvum", "lit": "fulgensvum"
         };
 
         const phrases = {
-            "my bad": "egoril kaklovum",
-            "let's go": "nosril badek",
-            "it's all good": "isoril pantaril gudovum",
-            "all good": "pantaril gudovum",
-            "i love you": "egoril filtek turil",
-            "i know": "egoril skiyek",
-            "peace out": "valeril paxril"
+            "my bad": "egoril malumvum",
+            "let's go": "nosril vadimek",
+            "it's all good": "isoril pantaril bonovum",
+            "all good": "pantaril bonovum",
+            "i love you": "egoril dilegek turil",
+            "i know": "egoril cognoscek",
+            "peace out": "valeril paxril",
+            "what's up": "quidril supraeril estek"
         };
 
         // Pronoun lookup table for Pos-Sha to English translation
         const pronounCases = {
             "egoril": { subject: "I", object: "me", possessive: "my" },
             "turil": { subject: "you", object: "you", possessive: "your" },
-            "isoril": { subject: "he", object: "him", possessive: "his" }, 
+            "isoril": { subject: "he/she/it", object: "him/her/it", possessive: "his/her/its" }, 
             "nosril": { subject: "we", object: "us", possessive: "our" },
             "illiril": { subject: "they", object: "them", possessive: "their" },
             "toril": { subject: "the", object: "the", possessive: "the" },
             "aril": { subject: "a", object: "a", possessive: "a" },
-            "hicril": { subject: "this", object: "this", possessive: "this" },
-            "illeril": { subject: "that", object: "that", possessive: "that" }
+            "hicril": { subject: "this/these", object: "this/these", possessive: "this/these" },
+            "illeril": { subject: "that/those", object: "that/those", possessive: "that/those" }
         };
 
-        // List of words that are usually followed by a possessive (Nouns ending in -iz)
-        const possessiveWords = [
-            "zeniz", "katiz", "kryguz", "domiiz", "soliz", "stelliz", "luniz", "hominiz", "paiz",
-            "shiniz", "riviz", "mariz", "arbiz", "hidriz", "aeriz", "pyriz", "terriz",
-            "tymeriz", "luriz", "noxiz", "viviz", "moriz", "nomiz", "topiz",
-            "ergiz", "numiz", "poliz", "maliz", "kosiz",
-            "psykiz", "kardiz", "somiz", "magiz", "deiz",
-            "gyniz", "amiiz", "regiz", "conceptiz"
-        ];
+        // List of Substantives (Nouns ending in -iz) that can be possessed
+        const substantiveWords = Object.keys(lexicon).filter(key => lexicon[key].endsWith('iz')).map(key => lexicon[key]);
 
-        // List of Verbs (ending in -ek)
-        const verbWords = [
-            "jestek", "fodrek", "vidrek", "badek", "filtek", "legrek",
-            "saltek", "kurrek", "pugnek", "facyek", "venyek", "capek",
-            "dontek", "ambulek", "hypnek", "skiyek", "volek", "juvlek",
-            "cogtek", "ludek"
-        ];
+        // List of Dynamics (Verbs ending in -ek)
+        const dynamicWords = Object.keys(lexicon).filter(key => lexicon[key].endsWith('ek')).map(key => lexicon[key]);
         
-        // Generate Reverse Dictionary (Pos-Sha -> English)
-        const reverseDictionary = {};
-        for (const [eng, pos] of Object.entries(dictionary)) {
+        // Generate Reverse Glossary (Pos-Sha -> Primary English Root)
+        const posShaGlossary = {};
+        for (const [eng, pos] of Object.entries(lexicon)) {
             if (!pronounCases[pos]) {
-                const currentRoot = reverseDictionary[pos];
-                // Simple check for primary word
-                if (!currentRoot || eng.length < currentRoot.length) {
-                    reverseDictionary[pos] = eng;
+                const currentRoot = posShaGlossary[pos];
+                // Prioritize shorter, common words as the primary root
+                if (!currentRoot || eng.length < currentRoot.length || eng === 'friend' || eng === 'dog' || eng === 'love') {
+                    posShaGlossary[pos] = eng;
                 }
             }
         }
         
-        // Explicitly set some common or key roots
-        reverseDictionary["gyniz"] = "woman"; 
-        reverseDictionary["paiz"] = "boy";
-        reverseDictionary["amiiz"] = "love";
-        reverseDictionary["regiz"] = "queen";
-        reverseDictionary["skiyek"] = "know"; 
-        reverseDictionary["facyek"] = "do"; 
+        // Explicitly set key roots for clarity in the reverse map
+        posShaGlossary["gyniz"] = "woman"; 
+        posShaGlossary["paiz"] = "boy";
+        posShaGlossary["amiiz"] = "love";
+        posShaGlossary["regiz"] = "queen";
+        posShaGlossary["cognoscek"] = "know"; 
+        posShaGlossary["faciek"] = "do"; 
+        posShaGlossary["felinuz"] = "cat";
+        posShaGlossary["caniz"] = "dog";
 
 
-        // --- DOM ELEMENTS ---
-        const inputs = {
+        // --- DOM REFERENCE INTERFACE ---
+        const uiElements = {
             main: document.getElementById('input-text'),
             output: document.getElementById('output-text'),
             clear: document.getElementById('clear-btn'),
@@ -347,67 +356,71 @@
             backToTop: document.getElementById('back-to-top')
         };
 
-        // --- STATE ---
+        // --- APPLICATION STATE ---
         let isEnglishToPosSha = true;
 
-        // --- INIT VOCAB UI ---
-        // Expanded starter pack for the UI using the NEW words
-        const starterPack = {
-            "I/Me/My": "egoril", "You/Your": "turil", "He/She/It": "isoril", "We/Us": "nosril",
-            "The/A": "toril/aril", "Friend/Homie": "zeniz", "Dog/Dawg": "kryguz", "House/Home": "domiiz",
-            "Love": "amiiz", "Food": "shiniz", "Time": "tymeriz", "To Be": "jestek",
-            "To Eat": "fodrek", "To Go": "badek", "To Know": "skiyek", "Big": "megavum",
-            "Small": "mikrovum", "Good": "gudovum", "Bad": "kaklovum", "No/Not": "noril", 
-            "Yes": "yaril", "Hello": "saluvum", "And": "enril", "With": "cumril"
+        // --- INIT LEXICON UI ---
+        // Curated set for the UI compendium
+        const compendiumSet = {
+            "I/Me/My": "egoril", "You/Your": "turil", "They/Them": "illiril", "We/Us": "nosril",
+            "The/A": "toril/aril", "Friend": "zeniz", "Dog": "caniz", "House": "domiiz",
+            "Love/Affection": "amiiz", "Fire/Ignis": "igniz", "Time/Chronos": "chroniz", "Knowledge": "scientiz",
+            "To Be": "estek", "To Eat": "comedek", "To Go": "vadimek", "To Know": "cognoscek",
+            "To Think/Cogitate": "cogitatek", "Big/Maximum": "maximalvum", "Small/Minimum": "minimalvum", "Good/Excellent": "bonovum",
+            "Bad/Terrible": "malumvum", "Happy/Felic": "felicivum", "Fast/Veloci": "velocivum", "Slow/Lentu": "lentuvum",
+            "No/Not": "negativeril", "Yes/Affirm": "affirmatiril", "And": "etril", "With/Cum": "cumril",
+            "Why?": "quaril", "Always": "semperril"
         };
 
-        // Clear existing list and populate with the expanded starter pack
-        inputs.vocabList.innerHTML = '';
-        for (const [eng, eos] of Object.entries(starterPack)) {
+        // Populate the Compendium Display
+        uiElements.vocabList.innerHTML = '';
+        for (const [eng, eos] of Object.entries(compendiumSet)) {
             const div = document.createElement('div');
-            div.className = "flex justify-between border-b border-slate-100 py-1.5 hover:bg-slate-50 px-1 rounded transition-colors";
-            div.innerHTML = `<span class="text-slate-500">${eng}</span> <span class="font-medium text-amber-600 font-ancient">${eos}</span>`;
-            inputs.vocabList.appendChild(div);
+            div.className = "flex justify-between border-b border-slate-100 py-2 hover:bg-slate-50 px-2 rounded-lg transition-colors";
+            div.innerHTML = `<span class="text-slate-600 font-medium">${eng}</span> <span class="font-semibold text-amber-700 font-ancient">${eos}</span>`;
+            uiElements.vocabList.appendChild(div);
         }
 
-        // --- TRANSLATION ENGINES ---
+        // --- LINGUISTIC TRANSPOSITION ENGINES ---
         
-        // 1. Eng -> Pos 
-        function translateToPosSha(text) {
+        // 1. Source (English) -> Target (Pos-Sha) 
+        function transposeToPosSha(text) {
             if (!text.trim()) return "";
             let processedText = text.toLowerCase();
             
-            // Phrases (Handle multi-word phrases first)
+            // Phase 1: Multi-word Phrase Mapping (Handle idioms and set phrases first)
             for (const [phrase, translation] of Object.entries(phrases)) {
+                // Use a more robust boundary check
                 processedText = processedText.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), translation);
             }
 
-            // Tokenize by splitting words, spaces, and punctuation
+            // Phase 2: Atomic Tokenization (Splitting words, spaces, and punctuation)
             const tokens = processedText.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
             
             let translatedTokens = tokens.map(token => {
-                if (/^[\s\p{P}]+$/u.test(token)) return token; 
+                if (/^[\s\p{P}]+$/u.test(token)) return token; // Preserve only spaces and punctuation
                 
                 const cleanWord = token.toLowerCase();
                 
-                // Check dictionary for exact match 
-                if (dictionary[cleanWord]) return dictionary[cleanWord];
+                // Check lexicon for exact match 
+                if (lexicon[cleanWord]) return lexicon[cleanWord];
                 
-                // Handle plurals (simple -s pluralization check)
+                // Handle simple plurals (e.g., cats -> cat)
                 if (cleanWord.endsWith('s')) {
                     const singular = cleanWord.slice(0, -1);
-                    if (dictionary[singular]) return dictionary[singular];
+                    if (lexicon[singular]) return lexicon[singular];
                 }
                 
-                // Default: Unknown word wrapper
+                // Phase 3: Default Neologism Protocol (Unknown word wrapper)
                 return `pos${cleanWord}ti`;
             });
 
+            // Phase 4: Case Restoration
             return formatCase(translatedTokens.join(''));
         }
 
-        // 2. Pos -> Eng (Contextual lookup)
-        function translateToEnglish(text) {
+        // 2. Target (Pos-Sha) -> Source (English) (Contextual interpretation)
+        function transposeToEnglish(text) {
             if (!text.trim()) return "";
             
             const wordsOnly = text.match(/\b\w+\b/g) || [];
@@ -427,7 +440,7 @@
 
                 if (/\w+/.test(token)) {
                     
-                    // --- 1. Handle invariant pronouns (contextual cases) ---
+                    // --- 1. Interpretation of Particles (Pronouns/Possessives) ---
                     if (pronounCases[cleanWord]) {
                         let pronounData = pronounCases[cleanWord];
                         let englishWord = pronounData.subject; 
@@ -438,12 +451,12 @@
                         const nextWord = nextWordOnlyIndex !== null ? wordsOnly[nextWordOnlyIndex].toLowerCase() : null;
                         const prevWord = prevWordOnlyIndex !== null ? wordsOnly[prevWordOnlyIndex].toLowerCase() : null;
                         
-                        // Rule 1: Possessive Case (followed by a possessable noun: ending in -iz)
-                        if (nextWord && possessiveWords.includes(nextWord)) {
+                        // Rule 1: Possessive Attribution (followed by a substantive: ending in -iz)
+                        if (nextWord && substantiveWords.includes(nextWord)) {
                             englishWord = pronounData.possessive;
                         
-                        // Rule 2: Objective Case (preceded by a verb: ending in -ek)
-                        } else if (prevWord && verbWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
+                        // Rule 2: Objective Case (preceded by a dynamic/verb: ending in -ek, and not the sentence initial word)
+                        } else if (prevWord && dynamicWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
                             englishWord = pronounData.object;
                         } 
                         
@@ -451,14 +464,14 @@
                         wordOnlyIndex++; 
                         continue;
                     
-                    // --- 2. Handle all other mapped words (nouns, verbs, adjectives, conjunctions) ---
-                    } else if (reverseDictionary[cleanWord]) {
-                        translatedTokens.push(reverseDictionary[cleanWord]);
+                    // --- 2. Lexical Lookup (Substantives, Dynamics, Qualitatives, other Particles) ---
+                    } else if (posShaGlossary[cleanWord]) {
+                        translatedTokens.push(posShaGlossary[cleanWord]);
                         wordOnlyIndex++;
                         continue;
                     }
 
-                    // --- 3. Check for pos...ti (Unknown word wrapper) ---
+                    // --- 3. Pos-ti Deconstruction (Reversing the neologism protocol) ---
                     const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
                     if (posTiMatch) {
                         translatedTokens.push(posTiMatch[1]); // Return the inner word
@@ -466,109 +479,113 @@
                         continue;
                     }
 
-                    // If it's a word but not in any list, just push the original token
+                    // If unmapped, maintain the original token
                     translatedTokens.push(token);
                     wordOnlyIndex++;
                 
                 } else {
-                    // 4. Keep original token (punctuation, spaces)
+                    // 4. Preserve Non-Word Tokens (Punctuation, spacing)
                     translatedTokens.push(token);
                 }
             }
 
+            // Phase 4: Case Restoration
             return formatCase(translatedTokens.join(''));
         }
 
-        // Helper for sentence case
+        // Helper for basic sentence case (Capitalizes first letter and letters after sentence-ending punctuation)
         function formatCase(str) {
             return str.replace(/(?:^|[.!?]\s+)([a-z])/g, (c) => c.toUpperCase());
         }
 
-        // Master Function
-        function processTranslation() {
-            const text = inputs.main.value;
+        // Master Function for Orchestrating Transposition
+        function initiateTransposition() {
+            const text = uiElements.main.value;
             if (isEnglishToPosSha) {
-                inputs.output.value = translateToPosSha(text);
+                uiElements.output.value = transposeToPosSha(text);
             } else {
-                inputs.output.value = translateToEnglish(text);
+                uiElements.output.value = transposeToEnglish(text);
             }
         }
 
-        // --- EVENTS ---
-        inputs.main.addEventListener('input', processTranslation);
+        // --- EVENT HANDLERS ---
+        uiElements.main.addEventListener('input', initiateTransposition);
 
-        inputs.clear.addEventListener('click', () => {
-            inputs.main.value = '';
-            inputs.output.value = '';
-            inputs.main.focus();
+        uiElements.clear.addEventListener('click', () => {
+            uiElements.main.value = '';
+            uiElements.output.value = '';
+            uiElements.main.focus();
         });
 
-        inputs.swapBtn.addEventListener('click', () => {
+        uiElements.swapBtn.addEventListener('click', () => {
             isEnglishToPosSha = !isEnglishToPosSha;
             
-            inputs.swapIcon.classList.toggle('rotate-180-smooth');
+            uiElements.swapIcon.classList.toggle('rotate-180-smooth');
             
             if (isEnglishToPosSha) {
-                inputs.inputLabel.textContent = "English";
-                inputs.inputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
-                inputs.outputLabel.textContent = "Pos-Sha";
-                inputs.outputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
-                inputs.main.placeholder = "Type your thoughts here, twin...";
+                uiElements.inputLabel.textContent = "Source Lexicon (English)";
+                uiElements.inputLabel.className = "text-sm font-extrabold text-slate-500 uppercase tracking-[0.2em] transition-all";
+                uiElements.outputLabel.textContent = "Target Lexicon (Pos-Sha)";
+                uiElements.outputLabel.className = "text-sm font-extrabold text-amber-700 uppercase tracking-[0.2em] transition-all";
+                uiElements.main.placeholder = "Inscribe your discourse for linguistic transposition, twin...";
             } else {
-                inputs.inputLabel.textContent = "Pos-Sha";
-                inputs.inputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
-                inputs.outputLabel.textContent = "English";
-                inputs.outputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
-                inputs.main.placeholder = "Type Pos-Sha here (e.g. egoril)...";
+                uiElements.inputLabel.textContent = "Source Lexicon (Pos-Sha)";
+                uiElements.inputLabel.className = "text-sm font-extrabold text-amber-700 uppercase tracking-[0.2em] transition-all";
+                uiElements.outputLabel.textContent = "Target Lexicon (English)";
+                uiElements.outputLabel.className = "text-sm font-extrabold text-slate-500 uppercase tracking-[0.2em] transition-all";
+                uiElements.main.placeholder = "Inscribe Pos-Sha terms (e.g. egoril dilegek turil)...";
             }
 
-            const currentIn = inputs.main.value;
-            const currentOut = inputs.output.value;
+            // Swap text content
+            const currentIn = uiElements.main.value;
+            const currentOut = uiElements.output.value;
             
-            inputs.main.value = currentOut;
-            inputs.output.value = currentIn;
+            uiElements.main.value = currentOut;
+            uiElements.output.value = currentIn;
             
-            processTranslation();
+            initiateTransposition(); // Re-translate the swapped content
         });
 
-        inputs.copy.addEventListener('click', () => {
-            if (!inputs.output.value) return;
-            inputs.output.select();
+        uiElements.copy.addEventListener('click', () => {
+            if (!uiElements.output.value) return;
+            uiElements.output.select();
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(inputs.output.value);
+                navigator.clipboard.writeText(uiElements.output.value);
             } else {
-                document.execCommand('copy');
+                document.execCommand('copy'); // Fallback for older browsers
             }
 
+            // Display toast notification
             const toast = document.getElementById('toast');
-            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-[-20px]'), 2000);
+            toast.classList.remove('opacity-0', 'translate-y-[-30px]');
+            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-[-30px]'), 2500);
         });
 
-        inputs.forgeBtn.addEventListener('click', () => {
-            const root = inputs.forgeRoot.value.trim().toLowerCase();
+        uiElements.forgeBtn.addEventListener('click', () => {
+            const root = uiElements.forgeRoot.value.trim().toLowerCase();
             if (!root) return;
             let suffix = "";
-            switch(inputs.forgeType.value) {
+            switch(uiElements.forgeType.value) {
                 case 'noun': suffix = "iz"; break;
                 case 'verb': suffix = "ek"; break;
                 case 'adj': suffix = "vum"; break; 
                 case 'other': suffix = "ril"; break;
             }
+            // Simple sanitization to create a clean root
             const cleanRoot = root.replace(/[^a-z0-9]/g, ''); 
             
-            inputs.forgeOut.textContent = cleanRoot + suffix;
-            inputs.forgeRes.classList.remove('hidden');
+            uiElements.forgeOut.textContent = cleanRoot + suffix;
+            uiElements.forgeRes.classList.remove('hidden');
         });
 
+        // Visibility toggle for the scroll-to-top button
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) inputs.backToTop.classList.add('visible');
-            else inputs.backToTop.classList.remove('visible');
+            if (window.scrollY > 400) uiElements.backToTop.classList.add('visible');
+            else uiElements.backToTop.classList.remove('visible');
         });
 
         window.addEventListener('load', () => {
-            inputs.main.focus();
-            inputs.main.placeholder = "Type your thoughts here, twin...";
+            uiElements.main.focus();
         });
 
     </script>
