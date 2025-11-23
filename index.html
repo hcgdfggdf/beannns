@@ -163,7 +163,19 @@
             "they": "klurak", "them": "klurak", "their": "klurak", "theirs": "klurak",
             "this": "ha'ru", "that": "vohrak", "these": "ha'ru", "those": "vohrak",
             "friend": "zi'naz", "dog": "ky'ar", "house": "kri'ez", "love": "a'mi",
-            "man": "dr'om", "woman": "ny'li", "god": "sha'ron"
+            "man": "dr'om", "woman": "ny'li", "god": "sha'ron",
+            // --- NEW TERMS START ---
+            "to be": "shal", "is": "shal", "am": "shal", "are": "shal", 
+            "to go": "ve'ra", "go": "ve'ra",
+            "to see": "li'da", "see": "li'da",
+            "to eat": "m'un", "eat": "m'un",
+            "and": "tek",
+            "but": "vir",
+            "big": "gra'al",
+            "small": "ni'ko",
+            "yes": "e'ya",
+            "no": "na'as"
+            // --- NEW TERMS END ---
         };
 
         let reverseDictionary = {
@@ -180,7 +192,19 @@
             "a'mi": "love",
             "dr'om": "man",
             "ny'li": "woman",
-            "sha'ron": "god"
+            "sha'ron": "god",
+            // --- NEW TERMS START ---
+            "shal": "to be/is/am/are",
+            "ve'ra": "to go/go",
+            "li'da": "to see/see",
+            "m'un": "to eat/eat",
+            "tek": "and",
+            "vir": "but",
+            "gra'al": "big",
+            "ni'ko": "small",
+            "e'ya": "yes",
+            "na'as": "no"
+            // --- NEW TERMS END ---
         };
         
         let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
@@ -279,18 +303,34 @@
 
             const sortedKeys = Object.keys(displayDict).sort();
 
-            sortedKeys.forEach(key => {
+            // Filter out redundant keys (like "i", "me", "my" which all map to "zu'ral")
+            const uniqueEnglishTerms = new Set();
+            const filteredKeys = sortedKeys.filter(key => {
+                const translation = displayDict[key];
+                // Check if the translation has already been displayed
+                if (!uniqueEnglishTerms.has(translation)) {
+                    uniqueEnglishTerms.add(translation);
+                    return true; // Keep this key as the representative for its translation
+                }
+                return false; // Skip redundant keys
+            });
+
+            filteredKeys.forEach(key => {
                 const term = document.createElement('div');
                 // Added py-2 for more vertical space between terms
                 term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 py-2'; 
+                
+                // Use the reverse dictionary for the English term to show all forms (e.g., "i/me/my" for zu'ral)
+                const englishForms = reverseDictionary[displayDict[key]] || key;
+
                 term.innerHTML = `
-                    <span class="vocab-term-text font-bold text-slate-700 w-1/2">${key.split('/')[0].charAt(0).toUpperCase() + key.slice(1)}</span>
+                    <span class="vocab-term-text font-bold text-slate-700 w-1/2">${englishForms.charAt(0).toUpperCase() + englishForms.slice(1)}</span>
                     <span class="vocab-term-text font-ancient text-amber-600 w-1/2">${displayDict[key]}</span>
                 `;
                 vocabList.appendChild(term);
             });
             
-            vocabCount.textContent = `${sortedKeys.length} terms`;
+            vocabCount.textContent = `${uniqueEnglishTerms.size} terms`; // Count based on unique translations
         }
 
 
