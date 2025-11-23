@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Pos-Sha: The Illuminated Tongue</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-color: #f8fafc;
-            --accent: #d97706;
-        }
-        
+        :root { --bg-color: #f8fafc; --accent: #d97706; }
         html { scroll-behavior: smooth; }
-
         body {
             font-family: 'Manrope', sans-serif;
             background-color: var(--bg-color);
@@ -22,59 +17,42 @@
             color: #1e293b;
         }
         .font-ancient { font-family: 'Cinzel', serif; }
-        
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255,255,255,0.85);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
         }
         .input-area { transition: all 0.3s ease; }
-        .input-area:focus-within {
-            background: white;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
-        }
-        
+        .input-area:focus-within { background: white; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade { animation: fadeIn 0.5s ease-out forwards; }
-
-        .back-to-top {
-            opacity: 0; transform: translateY(20px); pointer-events: none;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .back-to-top { opacity: 0; transform: translateY(20px); pointer-events: none; transition: all 0.4s cubic-bezier(0.4,0,0.2,1); }
         .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
-
         .rotate-180-smooth { transform: rotate(180deg); }
+        #toast { transition: all 0.3s ease; }
     </style>
 </head>
 <body id="top" class="min-h-screen flex flex-col items-center py-12 px-4 selection:bg-amber-100 selection:text-amber-900 relative">
 
     <header class="text-center mb-10 animate-fade w-full max-w-4xl flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
         <div class="text-center md:text-left">
-            <div class="inline-flex items-center justify-center w-12 h-12 bg-slate-900 text-amber-400 rounded-xl shadow-lg mb-2 text-2xl">
-                📜
-            </div>
+            <div class="inline-flex items-center justify-center w-12 h-12 bg-slate-900 text-amber-400 rounded-xl shadow-lg mb-2 text-2xl">📜</div>
             <h1 class="text-3xl md:text-4xl font-ancient font-bold text-slate-900 tracking-tight">Pos-Sha</h1>
-            <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project </p>
+            <p class="text-slate-500 text-xs font-bold tracking-widest uppercase">The Posti, Sharron Language Project</p>
         </div>
-        
-        <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior: 'smooth'})" 
-                class="group flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
+
+        <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior:'smooth'})" class="group flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
             <span class="text-xs font-bold text-slate-600 group-hover:text-amber-600 uppercase tracking-wide">Lexicon</span>
             <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-500 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
     </header>
 
-    <main class="w-full max-w-4xl space-y-8 animate-fade" style="animation-delay: 0.1s;">
-        
+    <main class="w-full max-w-4xl space-y-8 animate-fade" style="animation-delay:0.1s;">
+
         <div class="flex justify-center items-center mb-[-20px] z-10 relative">
             <button id="swap-mode-btn" class="bg-slate-900 hover:bg-amber-500 text-amber-400 hover:text-white p-3 rounded-full shadow-lg transition-all hover:scale-110 active:rotate-180 duration-300 group">
                 <svg class="w-5 h-5 transition-transform duration-500" id="swap-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
@@ -82,18 +60,13 @@
         </div>
 
         <div class="glass-card rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row min-h-[400px]">
-            
+
             <div class="flex-1 flex flex-col border-b md:border-b-0 md:border-r border-slate-100 input-area bg-slate-50/50">
                 <div class="px-6 py-4 flex justify-between items-center">
                     <span id="input-label" class="text-xs font-bold text-slate-400 uppercase tracking-widest transition-all">English</span>
                     <button id="clear-btn" class="text-slate-300 hover:text-red-400 transition-colors text-xs font-bold uppercase">Purge Text</button>
                 </div>
-                <textarea 
-                    id="input-text" 
-                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-700 leading-relaxed"
-                    placeholder="type here, twin..."
-                    spellcheck="false"
-                ></textarea>
+                <textarea id="input-text" class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-700 leading-relaxed" placeholder="type here, twin..." spellcheck="false"></textarea>
             </div>
 
             <div class="flex-1 flex flex-col bg-white/60 relative">
@@ -105,13 +78,9 @@
                         <span class="h-2 w-2 rounded-full bg-green-400"></span>
                     </div>
                 </div>
-                <textarea 
-                    id="output-text" 
-                    readonly
-                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-800 font-ancient font-medium leading-relaxed"
-                    placeholder="..."
-                ></textarea>
-                
+
+                <textarea id="output-text" readonly class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-800 font-ancient font-medium leading-relaxed" placeholder="..."></textarea>
+
                 <div class="absolute bottom-6 right-6">
                     <button id="copy-btn" class="group flex items-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full transition-all hover:shadow-lg active:scale-95">
                         <span class="text-sm font-bold">Replicate</span>
@@ -121,288 +90,298 @@
             </div>
         </div>
 
-        <div id="vocab-section" class="grid md:grid-cols-3 gap-6 scroll-mt-6" style="animation-delay: 0.2s;">
-            
+        <div id="vocab-section" class="grid md:grid-cols-3 gap-6 scroll-mt-6" style="animation-delay:0.2s;">
             <div class="glass-card rounded-3xl p-6 md:col-span-3 overflow-hidden flex flex-col">
                 <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
                     <h3 class="font-ancient font-bold text-lg text-slate-800">The Core Lexicon</h3>
                     <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded" id="vocab-count"></span>
                 </div>
-                
                 <div class="overflow-y-auto custom-scroll pr-2 max-h-96">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="vocab-list">
-                        </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="vocab-list"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" id="back-to-top" class="back-to-top fixed bottom-8 right-8 bg-slate-900 text-amber-400 p-3 rounded-full shadow-xl hover:scale-110 transition-transform z-40">
+    <button onclick="window.scrollTo({top:0, behavior:'smooth'})" id="back-to-top" class="back-to-top fixed bottom-8 right-8 bg-slate-900 text-amber-400 p-3 rounded-full shadow-xl hover:scale-110 transition-transform z-40">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
     </button>
 
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 transition-all duration-300 opacity-0 translate-y-[-20px] z-50">
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 opacity-0 translate-y-[-20px] z-50">
         <span class="text-amber-400 text-lg">✓</span>
         <span class="font-medium text-sm">Replicated to clipboard</span>
     </div>
 
     <script>
-        // Core Dictionaries
-        let dictionary = {
-            "i": "zu'ral", "me": "zu'ral", "my": "zu'ral", "mine": "zu'ral",
-            "you": "na'rul", "your": "na'rul", "yours": "na'rul",
-            "he": "si'nur", "him": "si'nur", "his": "si'nur",
-            "she": "si'nur", "her": "si'nur", "hers": "si'nur",
-            "it": "si'nur", "its": "si'nur",
-            "we": "gu'ral", "us": "gu'ral", "our": "gu'ral", "ours": "gu'ral",
-            "they": "klurak", "them": "klurak", "their": "klurak", "theirs": "klurak",
-            "this": "ha'ru", "that": "vohrak", "these": "ha'ru", "those": "vohrak",
-            // New Additions: Nouns
-            "friend": "zi'naz", "dog": "ky'ar", "house": "kri'ez", "love": "a'mi",
-            "man": "dr'om", "woman": "ny'li", "god": "sha'ron", 
-            "water": "a'quil", "fire": "fyr'os", "sun": "sy'lar", "moon": "lun'ra", "stone": "pet'ra", "rock": "pet'ra",
-            // New Additions: Verbs
-            "is": "es'ta", "am": "es'ta", "are": "es'ta", "to be": "es'ta", 
-            "have": "ka'dren", "has": "ka'dren", "go": "va'ri", "went": "va'ri", "going": "va'ri", 
-            "speak": "gu'vok", "say": "gu'vok", "tell": "gu'vok", 
-            "see": "vri'da", "look": "vri'da", "watch": "vri'da",
-            // New Additions: Adjectives & Conjunctions
-            "big": "mag'na", "great": "mag'na", "small": "mi'ni", "little": "mi'ni",
-            "and": "et", "but": "sed"
-        };
+ 
+    let dictionary = {
+      // PRONOUNS
+      "i":"zu'rash","me":"zu'rash","my":"zu'rash","mine":"zu'rash",
+      "you":"na'ru","your":"na'ru","yours":"na'ru",
+      "he":"si'nur","him":"si'nur","his":"si'nur",
+      "she":"sa'nar","her":"sa'nar","hers":"sa'nar",
+      "it":"tu'gur","its":"tu'gur",
+      "we":"gu'rash","us":"gu'rash","our":"gu'rash","ours":"gu'rash",
+      "they":"kalum","them":"kalum","their":"kalum","theirs":"kalum",
 
-        let reverseDictionary = {
-            "zu'ral": "i/me/my",
-            "na'rul": "you/your",
-            "si'nur": "he/she/it/him/her/his",
-            "gu'ral": "we/us/our",
-            "klurak": "they/them/their",
-            "ha'ru": "this/these",
-            "vohrak": "that/those",
-            // New Additions: Nouns
-            "zi'naz": "friend",
-            "ky'ar": "dog",
-            "kri'ez": "house",
-            "a'mi": "love",
-            "dr'om": "man",
-            "ny'li": "woman",
-            "sha'ron": "god",
-            "a'quil": "water",
-            "fyr'os": "fire",
-            "sy'lar": "sun",
-            "lun'ra": "moon",
-            "pet'ra": "stone/rock",
-            // New Additions: Verbs
-            "es'ta": "is/am/are/to be",
-            "ka'dren": "have/has",
-            "va'ri": "go/went",
-            "gu'vok": "speak/say/tell",
-            "vri'da": "see/look/watch",
-            // New Additions: Adjectives & Conjunctions
-            "mag'na": "big/great",
-            "mi'ni": "small/little",
-            "et": "and",
-            "sed": "but"
-        };
-        
-        let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
+      // BASIC NOUNS
+      "person":"kra'su","people":"kra'suak","man":"daram","woman":"ninara",
+      "child":"turun","boy":"daramu","girl":"ninari","friend":"zi'nash","enemy":"kur'gal",
+      "king":"lugal'da","queen":"lugal'na","priest":"šu'mar","god":"dingir'zu","goddess":"dingir'na",
+      "house":"e'gal","home":"e'gal","city":"uru'mash","village":"al'kiri","temple":"e'dursha",
+      "market":"kar'bu","road":"dar'kan","wall":"gar'um","gate":"beli'ka","palace":"e'zul",
 
-        // --- DOM Elements ---
-        const inputText = document.getElementById('input-text');
-        const outputText = document.getElementById('output-text');
-        const inputLabel = document.getElementById('input-label');
-        const outputLabel = document.getElementById('output-label');
-        const swapModeBtn = document.getElementById('swap-mode-btn');
-        const swapIcon = document.getElementById('swap-icon');
-        const clearBtn = document.getElementById('clear-btn');
-        const copyBtn = document.getElementById('copy-btn');
-        const toast = document.getElementById('toast');
-        const backToTopBtn = document.getElementById('back-to-top');
-        const vocabList = document.getElementById('vocab-list');
-        const vocabCount = document.getElementById('vocab-count');
+      // FAMILY
+      "father":"abu'kar","mother":"amma'ru","brother":"ah'kar","sister":"ak'ru","son":"muru","daughter":"tiri'na",
 
+      // BODY
+      "head":"rap'u","hair":"sar'ul","eye":"ig'aru","ear":"shum'ul","nose":"nar'uk","mouth":"sip'ru",
+      "tooth":"dam'u","hand":"idu","arm":"gud'u","leg":"ped'u","foot":"kal'um","heart":"shu'gin","blood":"dam'ar",
 
-        // --- Utility Functions ---
+      // NATURE & ELEMENTS
+      "water":"a'rum","river":"idigna","lake":"a'qulyn","sea":"a'qulmar","ocean":"a'qulmaru",
+      "earth":"ki'mur","soil":"kur'mu","stone":"ab'gal","rock":"ab'gal","mountain":"kur'rum","valley":"tar'kan",
+      "tree":"kisallu","forest":"kisalluk","leaf":"pal'lu","flower":"zala'esh",
+      "sky":"an'kar","sun":"sharru'gin","moon":"lun'gar","star":"kibar'zu","wind":"va'lenos","storm":"bur'zak",
+      "fire":"ur'kul","smoke":"nar'esh","light":"zala'esh","dark":"mul'kur","shadow":"mul'zar",
 
-        /**
-         * Cleans a word by converting to lower case and removing punctuation.
-         * @param {string} word 
-         * @returns {string} The cleaned word.
-         */
-        const cleanWord = (word) => {
-            // Keep apostrophes (for Pos-Sha terms like zu'ral)
-            return word.toLowerCase().replace(/[^a-z0-9']/g, '');
-        }
+      // ANIMALS
+      "dog":"kya'ru","cat":"mi'sar","bird":"fe'ryn","fish":"naru'ka","horse":"sag'gul","cow":"guz'ra",
+      "sheep":"ur'luk","goat":"za'kul","monkey":"domos","snake":"ish'kar","lion":"ar'gal","bear":"bar'kum",
+      "insect":"tar'bug","bee":"zil'ka","rat":"sik'mu","mouse":"sik'nu","drake":"ur'vak",
 
-        /**
-         * Main translation logic.
-         */
-        const translate = () => {
-            const input = inputText.value;
-            if (!input.trim()) {
-                outputText.value = '...';
-                return;
-            }
+      // FOOD & DRINK
+      "bread":"nan'zu","waterdrink":"a'rum","wine":"šar'nu","milk":"gul'ra","meat":"kar'nu","fishmeat":"naru'kar",
+      "fruit":"mela'zu","apple":"man'zu","date":"tamar'ka","honey":"dul'esh","salt":"mel'ka","spice":"zir'nu",
 
-            const words = input.split(/\s+/);
-            const translatedWords = words.map(word => {
-                const cleaned = cleanWord(word);
-                let translation = '';
-                let punctuation = '';
+      // TIME & CALENDAR
+      "day":"udun","night":"mushu","dawn":"udun'ra","dusk":"mushu'ra","morning":"sol'gan",
+      "hour":"sa'tur","minute":"mi'nu","second":"tu'nu","today":"temen'ra","yesterday":"temenu","tomorrow":"temen'tu",
+      "year":"shar'u","month":"shar'im","season":"se'ru","spring":"zir'har","summer":"sar'na","autumn":"har'ku","winter":"nur'ka",
 
-                // Extract any trailing punctuation (e.g., ".", "?", "!")
-                const matchPunctuation = word.match(/([^a-zA-Z0-9']+)$/);
-                if (matchPunctuation) {
-                    punctuation = matchPunctuation[1];
-                }
+      // VERBS (common)
+      "be":"eshta","is":"eshta","are":"eshta","am":"eshta",
+      "have":"kadar","has":"kadar","had":"kadar",
+      "go":"alaku","went":"alaku","come":"balaku","walk":"halam","run":"rashkum","jump":"tupur",
+      "see":"igaru","look":"igaru","watch":"igaru","hear":"shumel","listen":"shumel",
+      "speak":"qabru","say":"qabru","tell":"qabru","ask":"siraku","answer":"talaku",
+      "eat":"uk'ru","drink":"ak'ru","sleep":"mur'nu","wake":"zar'nu","think":"nim'ru","know":"ida'ru",
+      "love":"ramash","hate":"hulutu","fear":"pulu'um","laugh":"zir'la","cry":"lun'ka",
+      "make":"dra'kul","build":"banitu","break":"lammat","destroy":"lammat","create":"nur'ga",
+      "give":"shar'u","take":"kar'u","hold":"gir'nu","drop":"sur'u",
+      "buy":"karu'ma","sell":"shu'ma","pay":"tal'u","steal":"tar'kum",
+      "open":"pash'u","close":"gash'u","lock":"tar'esh","unlock":"tar'eshu",
+      "help":"tamar'gu","kill":"gur'zak","fight":"bash'kar","win":"sal'u","lose":"nar'ul",
 
-                if (currentMode === 'enToPs') {
-                    // English to Pos-Sha translation
-                    if (dictionary[cleaned]) {
-                        translation = dictionary[cleaned];
-                    } else {
-                        // NEW LOGIC: If not found, apply pos...ti
-                        // Preserve the original cleaned word, but format it
-                        translation = `pos${cleaned}ti`; 
-                    }
-                } else {
-                    // Pos-Sha to English translation
-                    if (reverseDictionary[cleaned]) {
-                        translation = reverseDictionary[cleaned];
-                    } else if (cleaned.startsWith('pos') && cleaned.endsWith('ti') && cleaned.length > 5) {
-                        // NEW LOGIC: If it looks like a pos...ti word, remove the tags
-                        // Example: poswordti -> word
-                        translation = cleaned.slice(3, -2);
-                    } else {
-                        // If not found and not a pos...ti word, just return the word
-                        translation = cleaned;
-                    }
-                }
+      // ADJECTIVES & DESCRIPTIONS
+      "big":"galum","large":"galum","small":"sagash","little":"sagash",
+      "long":"ur'gan","short":"kur'su","wide":"har'gan","narrow":"sar'ku",
+      "hot":"ash'ru","cold":"nuk'ru","warm":"zar'nu","cool":"mir'ku",
+      "new":"eshnu","old":"labar","young":"tur'nu","ancient":"zi'gal",
+      "good":"damar","bad":"hulum","right":"zur'ka","wrong":"mar'ku",
+      "fast":"zar'kin","slow":"basur","strong":"gud'ra","weak":"sip'ru",
+      "happy":"ren'sha","sad":"dulun","angry":"eshker","calm":"sil'nu",
+      "clean":"tiz'zu","dirty":"mur'kash","full":"mal'ra","empty":"nul'ka",
 
-                // Preserve original casing of the first letter if it was capitalized
-                if (word.length > 0 && word[0] === word[0].toUpperCase() && translation.length > 0) {
-                    translation = translation.charAt(0).toUpperCase() + translation.slice(1);
-                }
+      // QUANTIFIERS & NUMBERS
+      "one":"ia","two":"zu","three":"esh","four":"nar","five":"im",
+      "six":"sha","seven":"tur","eight":"gal","nine":"kin","ten":"ash",
+      "many":"maru","few":"siru","all":"kala","some":"tiru","none":"nul",
 
-                return translation + punctuation;
-            });
+      // COLORS (remixed)
+      "white":"su'ra","black":"mar'ku","red":"sar'ga","blue":"nir'ku","green":"zil'ra",
+      "yellow":"sar'nu","brown":"bar'ku","gray":"mur'ga","gold":"shar'nu","silver":"zil'um",
 
-            outputText.value = translatedWords.join(' ');
-        }
+      // SENSES & MENTAL
+      "mind":"nim'ru","dream":"ran'gu","memory":"zamar'u","idea":"igi'lu",
+      "hear":"shumel","smell":"rif'nu","taste":"zak'ru","touch":"tar'nu","feel":"ram'ku",
 
-        /**
-         * Renders the vocabulary list.
-         */
-        const renderVocab = () => {
-            vocabList.innerHTML = '';
-            
-            // We'll always display English -> Pos-Sha for clarity in the Lexicon section
-            const displayDict = dictionary;
+      // TOOLS & OBJECTS
+      "wheel":"gal'u","spear":"kur'ash","sword":"gur'kat","shield":"bar'ka","rope":"su'gal",
+      "boat":"ma'kar","chariot":"ruk'gal","jar":"gum'ru","tablet":"dub'ga","stylus":"ti'kar",
+      "cloth":"teg'ru","lamp":"nur'ash","bed":"mir'ka","chair":"se'lu",
+      "book":"dub'ru","map":"nar'gam","letter":"ma'shu","seal":"sig'ga",
 
-            const sortedKeys = Object.keys(displayDict).sort();
+      // BUILDINGS & PLACES
+      "field":"kur'esh","garden":"par'lu","harbor":"mar'ku","tower":"ur'kan","fort":"dur'gal",
+      "bridge":"kis'gal","road":"dar'kan","square":"tar'ash","market":"kar'bu","inn":"su'bar",
 
-            sortedKeys.forEach(key => {
-                // Ensure we handle multi-word definitions for the display list nicely
-                const posShaTerm = displayDict[key];
-                
-                // Get the main English word for display (handles cases like "is: es'ta" where "is" is the key)
-                const englishTerm = key.split('/')[0]; 
-                
-                const term = document.createElement('div');
-                term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
-                term.innerHTML = `
-                    <span class="font-bold text-slate-700 w-1/2">${englishTerm.charAt(0).toUpperCase() + englishTerm.slice(1)}</span>
-                    <span class="font-ancient text-amber-600 w-1/2">${posShaTerm}</span>
-                `;
-                vocabList.appendChild(term);
-            });
-            
-            vocabCount.textContent = `${Object.keys(reverseDictionary).length} terms`; // Count unique Pos-Sha terms
-        }
+      // LAW, TRADE, GOV
+      "law":"shub'ra","order":"tar'um","kingdom":"uru'gal","council":"pu'ru","tribute":"gul'ka",
+      "tax":"karu'nu","judge":"sag'bara","prison":"dur'ku","peace":"shal'nu","war":"luk'gar",
 
+      // ABSTRACTS
+      "life":"šu'ra","death":"mar'zu","fate":"nim'gar","honor":"sha'lu","shame":"bar'lu",
+      "truth":"igi'ra","lie":"sar'nu","song":"gu'zu","story":"ep'ru","name":"isim'ru",
+      "language":"eme'gatur","writing":"sag'dub","music":"nar'zu","art":"ip'kar",
 
-        // --- Event Handlers ---
+      // COMMON PUNCTUALS & MISC
+      "yes":"en","no":"ul-en","please":"tamash","thanks":"ashur","welcome":"nā'ru",
+      "hello":"tuwan'ra","hi":"tuwan","bye":"negin","now":"ima'ra","soon":"zir'ka",
+      "here":"innu","there":"ennu","where":"an'ka","why":"mai'ru","how":"kam'ru",
+      "because":"sha'ra","if":"in'ga","when":"tem'ru","then":"tar'ru","also":"u'ga"
+    };
 
-        /**
-         * Toggles the translation mode (English <-> Pos-Sha).
-         */
-        const swapMode = () => {
-            currentMode = currentMode === 'enToPs' ? 'psToEn' : 'enToPs';
-            
-            if (currentMode === 'enToPs') {
-                inputLabel.textContent = 'English';
-                outputLabel.textContent = 'Pos-Sha';
-                inputText.placeholder = "type here, twin...";
+    // ---------------------------
+    // AUTO-GENERATE reverseDictionary FROM dictionary
+    // ---------------------------
+    let reverseDictionary = {};
+    for (let key in dictionary) {
+        if (!Object.prototype.hasOwnProperty.call(dictionary, key)) continue;
+        const val = dictionary[key]; // e.g., "zu'rash"
+        // normalize key to cleaned format of pos-sha tokens (we keep apostrophes)
+        // store as array if duplicates exist
+        if (reverseDictionary[val]) {
+            if (Array.isArray(reverseDictionary[val])) {
+                reverseDictionary[val].push(key);
             } else {
-                inputLabel.textContent = 'Pos-Sha';
-                outputLabel.textContent = 'English';
-                inputText.placeholder = "Pos-Sha text...";
+                reverseDictionary[val] = [reverseDictionary[val], key];
             }
-
-            // Swap text contents
-            const tempText = inputText.value;
-            inputText.value = outputText.value;
-            outputText.value = tempText || '...';
-            
-            swapIcon.classList.toggle('rotate-180-smooth');
-            // renderVocab() is not needed on swap since we fixed it to always show EN->PS for clarity
+        } else {
+            reverseDictionary[val] = key;
         }
+    }
 
-        /**
-         * Clears the input and output areas.
-         */
-        const clearText = () => {
-            inputText.value = '';
+    // ---------------------------
+    // TRANSLATOR LOGIC & UI HOOKS
+    // ---------------------------
+    let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
+
+    // DOM
+    const inputText = document.getElementById('input-text');
+    const outputText = document.getElementById('output-text');
+    const inputLabel = document.getElementById('input-label');
+    const outputLabel = document.getElementById('output-label');
+    const swapModeBtn = document.getElementById('swap-mode-btn');
+    const swapIcon = document.getElementById('swap-icon');
+    const clearBtn = document.getElementById('clear-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const toast = document.getElementById('toast');
+    const backToTopBtn = document.getElementById('back-to-top');
+    const vocabList = document.getElementById('vocab-list');
+    const vocabCount = document.getElementById('vocab-count');
+
+    // Utility: keep apostrophes, lowercase, remove other punctuation except leading/trailing punctuation captured later
+    const cleanWord = (word) => {
+        return word.toLowerCase().replace(/[^a-z0-9']/g, '');
+    }
+
+    // Translate engine
+    const translate = () => {
+        const input = inputText.value;
+        if (!input.trim()) {
             outputText.value = '...';
-            inputText.focus();
+            return;
         }
 
-        /**
-         * Copies the output text to the clipboard and shows a toast.
-         */
-        const copyOutput = () => {
-            if (outputText.value && outputText.value !== '...') {
-                navigator.clipboard.writeText(outputText.value).then(() => {
-                    // Show toast notification
-                    toast.classList.add('opacity-100', 'translate-y-0');
-                    toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-                    setTimeout(() => {
-                        toast.classList.remove('opacity-100', 'translate-y-0');
-                        toast.classList.add('opacity-0', 'translate-y-[-20px]');
-                    }, 2000);
-                }).catch(err => {
-                    console.error('Could not copy text: ', err);
-                });
-            }
-        }
-        
-        /**
-         * Toggles the back-to-top button visibility.
-         */
-        const handleScroll = () => {
-            if (window.scrollY > 300) {
-                backToTopBtn.classList.add('visible');
+        const words = input.split(/\s+/);
+        const translatedWords = words.map(word => {
+            const cleaned = cleanWord(word);
+            let translation = '';
+            let punctuation = '';
+
+            // Extract trailing punctuation (.,!?;:)
+            const matchPunctuation = word.match(/([^a-zA-Z0-9']+)$/);
+            if (matchPunctuation) punctuation = matchPunctuation[1];
+
+            if (currentMode === 'enToPs') {
+                // English -> Pos-Sha
+                if (dictionary[cleaned]) {
+                    translation = dictionary[cleaned];
+                } else {
+                    // fallback generator: pos + cleaned + ti
+                    translation = `pos${cleaned}ti`;
+                }
             } else {
-                backToTopBtn.classList.remove('visible');
+                // Pos-Sha -> English
+                // If exact match exists in reverseDictionary
+                if (reverseDictionary[cleaned]) {
+                    const rv = reverseDictionary[cleaned];
+                    if (Array.isArray(rv)) translation = rv.join('/');
+                    else translation = rv;
+                } else if (cleaned.startsWith('pos') && cleaned.endsWith('ti') && cleaned.length > 5) {
+                    // posXti pattern fallback -> return inner english
+                    translation = cleaned.slice(3, -2);
+                } else {
+                    // No match: return cleaned (so user sees original token)
+                    translation = cleaned;
+                }
             }
+
+            // Preserve capitalization if original word started with capital
+            if (word.length > 0 && word[0] === word[0].toUpperCase() && translation.length > 0) {
+                translation = translation.charAt(0).toUpperCase() + translation.slice(1);
+            }
+
+            return translation + punctuation;
+        });
+
+        outputText.value = translatedWords.join(' ');
+    }
+
+    // Render lexicon box (EN -> PS view)
+    const renderVocab = () => {
+        vocabList.innerHTML = '';
+        const keys = Object.keys(dictionary).sort((a,b)=>a.localeCompare(b));
+        keys.forEach(key => {
+            const ps = dictionary[key];
+            const term = document.createElement('div');
+            term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
+            term.innerHTML = `
+                <span class="font-bold text-slate-700 w-1/2">${key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                <span class="font-ancient text-amber-600 w-1/2">${ps}</span>
+            `;
+            vocabList.appendChild(term);
+        });
+        // vocab count from reverseDictionary unique keys
+        vocabCount.textContent = `${Object.keys(reverseDictionary).length} terms`;
+    }
+
+    // Swap english <-> pos-sha mode
+    const swapMode = () => {
+        currentMode = currentMode === 'enToPs' ? 'psToEn' : 'enToPs';
+        if (currentMode === 'enToPs') {
+            inputLabel.textContent = 'English';
+            outputLabel.textContent = 'Pos-Sha';
+            inputText.placeholder = "type here, twin...";
+        } else {
+            inputLabel.textContent = 'Pos-Sha';
+            outputLabel.textContent = 'English';
+            inputText.placeholder = "Pos-Sha text...";
         }
+        // Swap text values so user can flip back/forth easily
+        const tempText = inputText.value;
+        inputText.value = outputText.value && outputText.value !== '...' ? outputText.value : '';
+        outputText.value = tempText || '...';
+        swapIcon.classList.toggle('rotate-180-smooth');
+    }
 
-        // --- Initialization ---
+    const clearText = () => { inputText.value = ''; outputText.value = '...'; inputText.focus(); }
 
-        const init = () => {
-            // Event Listeners
-            inputText.addEventListener('input', translate);
-            swapModeBtn.addEventListener('click', swapMode);
-            clearBtn.addEventListener('click', clearText);
-            copyBtn.addEventListener('click', copyOutput);
-            window.addEventListener('scroll', handleScroll);
-            
-            // Initial setup
-            renderVocab();
+    const copyOutput = () => {
+        if (outputText.value && outputText.value !== '...') {
+            navigator.clipboard.writeText(outputText.value).then(() => {
+                toast.classList.remove('opacity-0','translate-y-[-20px]'); toast.classList.add('opacity-100');
+                setTimeout(()=>{ toast.classList.add('opacity-0'); }, 1600);
+            }).catch(err => console.error('copy failed', err));
         }
+    }
 
-        // Run initialization when the page is loaded
-        init();
+    const handleScroll = () => {
+        if (window.scrollY > 300) backToTopBtn.classList.add('visible'); else backToTopBtn.classList.remove('visible');
+    }
+
+    // Init
+    const init = () => {
+        inputText.addEventListener('input', translate);
+        swapModeBtn.addEventListener('click', swapMode);
+        clearBtn.addEventListener('click', clearText);
+        copyBtn.addEventListener('click', copyOutput);
+        window.addEventListener('scroll', handleScroll);
+        renderVocab();
+    }
+
+    init();
     </script>
 </body>
 </html>
