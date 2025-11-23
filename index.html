@@ -90,6 +90,14 @@ body{font-family:'Manrope',sans-serif;background-color:var(--bg-color);backgroun
 </div>
 <script>
 let dictionary={"i":"zu·ral","me":"zu·ral","my":"zu·ral","mine":"zu·ral","you":"na·rul","your":"na·rul","yours":"na·rul","he":"si·nur","she":"si·nur","we":"gu·ral","they":"klurak","friend":"zi·naz","dog":"ky·ar","cat":"mi·lu","house":"kri·ez","love":"a·mi","man":"dr·om","woman":"ny·li","child":"zi·lu","water":"a·quil","fire":"fyr·os","earth":"tu·ra","wind":"shi·ku","sun":"sy·lar","moon":"lun·ra","star":"zi·tar","stone":"pet·ra","mountain":"kur·nu","river":"a·kal","tree":"gi·lu","flower":"pu·ra","food":"na·ru","bread":"ba·lu","wine":"shar·nu","meat":"ka·shi","fish":"u·li","bird":"zu·mi","to be":"es·ta","have":"ka·dren","go":"va·ri","come":"ra·ni","speak":"gu·vok","see":"vri·da","eat":"mi·zu","drink":"a·li","sleep":"su·na","run":"ra·ku","walk":"wa·ri","big":"mag·na","small":"mi·ni","good":"zu·ra","bad":"mu·ra","happy":"a·sha","sad":"ma·sha","angry":"gi·sha","and":"et","but":"sed","if":"ki","or":"lu","not":"ni","all":"tu·mi","some":"zi·ra","one":"i·tu","two":"zu·tu","three":"mi·tu","four":"ni·tu","five":"ki·tu","six":"si·tu","seven":"sa·tu","eight":"mu·tu","nine":"lu·tu","ten":"tu·ta","door":"ka·lun","window":"vi·ral","road":"pa·sha","city":"ku·nil","market":"za·lu","king":"ru·zar","queen":"li·sar","soldier":"ta·vok","war":"mi·rak","peace":"a·lin","day":"sy·ru","night":"lu·zan","rain":"na·ril","snow":"si·lun","storm":"gi·rak","cloud":"fu·lar","mountain pass":"kur·zin","valley":"ni·zar","forest":"gi·ruk","desert":"tu·mar","sea":"a·luz","lake":"mi·zur","island":"zi·kar","boat":"ra·lun","horse":"ko·zur","cow":"ka·lu","sheep":"ni·kul","goat":"gi·lum","pig":"pu·ran","chicken":"zu·kan","egg":"lu·mi","milk":"mi·qua","cheese":"ki·sha","salt":"sa·lun","sugar":"zu·lin","honey":"mi·sha","knife":"ka·dar","sword":"su·ran","shield":"zi·mar","bow":"ba·lun","arrow":"a·zur","helmet":"he·kar","armor":"ar·lun"};
+let reverseDictionary={};
+for(const [key,value] of Object.entries(dictionary)){
+    reverseDictionary[value]=key;
+}
+// Note: If multiple English words map to the same Pos-Sha word (like 'i', 'me', 'my', 'mine' -> 'zu·ral'),
+// the reverse dictionary will only store the last key encountered (in this case, 'mine').
+// This is an inherent limitation of a simple key/value flip for a many-to-one dictionary structure.
+
 let currentMode='enToPs';
 const inputText=document.getElementById('input-text');
 const outputText=document.getElementById('output-text');
@@ -110,7 +118,10 @@ let words=input.split(/\s+/);
 let translatedWords=words.map(word=>{
 let cleaned=cleanWord(word);let translation='';let punctuation='';let matchPunctuation=word.match(/([^a-zA-Z0-9·']+)$/);if(matchPunctuation){punctuation=matchPunctuation[1];}
 if(currentMode==='enToPs'){translation=dictionary[cleaned]?dictionary[cleaned]:`pos${cleaned}ti`;}
-else{translation=reverseDictionary[cleaned]?reverseDictionary[cleaned]:cleaned.startsWith('pos')&&cleaned.endsWith('ti')&&cleaned.length>5?cleaned.slice(3,-2):cleaned;}
+else{
+    // Mode: psToEn (Pos-Sha to English)
+    // Use the correctly created reverseDictionary
+    translation=reverseDictionary[cleaned]?reverseDictionary[cleaned]:cleaned.startsWith('pos')&&cleaned.endsWith('ti')&&cleaned.length>5?cleaned.slice(3,-2):cleaned;}
 if(word.length>0&&word[0]===word[0].toUpperCase()&&translation.length>0){translation=translation.charAt(0).toUpperCase()+translation.slice(1);}
 return translation+punctuation;});
 outputText.value=translatedWords.join(' ');
@@ -126,7 +137,7 @@ const term=document.createElement('div');
 term.className='flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
 term.innerHTML=`<span class="font-bold text-slate-700 w-1/2">${englishTerm.charAt(0).toUpperCase()+englishTerm.slice(1)}</span><span class="font-ancient text-amber-600 w-1/2">${posShaTerm}</span>`;
 vocabList.appendChild(term);});
-vocabCount.textContent=`${Object.keys(reverseDictionary).length} terms`;};
+vocabCount.textContent=`${Object.keys(dictionary).length} terms`;};
 const swapMode=()=>{
 currentMode=currentMode==='enToPs'?'psToEn':'enToPs';
 if(currentMode==='enToPs'){inputLabel.textContent='English';outputLabel.textContent='Pos-Sha';inputText.placeholder="type here, twin...";}
