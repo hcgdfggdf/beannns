@@ -68,7 +68,7 @@
         
         <button onclick="document.getElementById('vocab-section').scrollIntoView({behavior: 'smooth'})" 
                 class="group flex items-center gap-2 px-5 py-2 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-amber-200 transition-all">
-            <span class="text-xs font-bold text-slate-600 group-hover:text-amber-600 uppercase tracking-wide">Vocab</span>
+            <span class="text-xs font-bold text-slate-600 group-hover:text-amber-600 uppercase tracking-wide">Lexicon</span>
             <svg class="w-4 h-4 text-slate-400 group-hover:text-amber-500 transform group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
     </header>
@@ -123,38 +123,14 @@
 
         <div id="vocab-section" class="grid md:grid-cols-3 gap-6 scroll-mt-6" style="animation-delay: 0.2s;">
             
-            <div class="glass-card rounded-3xl p-6 md:col-span-1 flex flex-col justify-center">
-                <h3 class="font-ancient font-bold text-lg text-slate-800 mb-1">Architect 🧱</h3>
-                <p class="text-xs text-slate-400 mb-4">Fabricate novel Pos-Sha terminology.</p>
-                
-                <div class="space-y-3">
-                    <input type="text" id="forge-input" placeholder="Root (e.g. Illuminate)" class="w-full bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none transition-shadow">
-                    <div class="relative">
-                        <select id="forge-type" class="w-full appearance-none bg-slate-100 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-amber-400 outline-none text-slate-600 transition-shadow cursor-pointer">
-                            <option value="noun">Noun [-iz]</option>
-                            <option value="verb">Verb [-ek]</option>
-                            <option value="adj">Adjective [-vum]</option>
-                            <option value="other">Other [-ril]</option>
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                        </div>
-                    </div>
-                    <button id="forge-btn" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 rounded-xl transition-colors text-sm shadow-md hover:shadow-lg active:scale-95">Construct Term</button>
-                    <div id="forge-result" class="text-center hidden pt-2">
-                        <span class="font-ancient text-lg text-slate-800 animate-pulse" id="forge-output"></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-3xl p-6 md:col-span-2 overflow-hidden flex flex-col h-64 md:h-auto">
+            <div class="glass-card rounded-3xl p-6 md:col-span-3 overflow-hidden flex flex-col">
                 <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
                     <h3 class="font-ancient font-bold text-lg text-slate-800">The Core Lexicon</h3>
                     <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded" id="vocab-count"></span>
                 </div>
                 
-                <div class="overflow-y-auto custom-scroll pr-2">
-                    <div class="grid grid-cols-2 gap-2 text-sm" id="vocab-list">
+                <div class="overflow-y-auto custom-scroll pr-2 max-h-96">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="vocab-list">
                         </div>
                 </div>
             </div>
@@ -171,7 +147,7 @@
     </div>
 
     <script>
-        // Core Dictionaries (Unchanged)
+        // Core Dictionaries
         let dictionary = {
             "i": "zu'ral", "me": "zu'ral", "my": "zu'ral", "mine": "zu'ral",
             "you": "na'rul", "your": "na'rul", "yours": "na'rul",
@@ -202,13 +178,6 @@
             "sha'ron": "god"
         };
         
-        const suffixes = {
-            "noun": "-iz",
-            "verb": "-ek",
-            "adj": "-vum",
-            "other": "-ril"
-        };
-
         let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
 
         // --- DOM Elements ---
@@ -224,11 +193,7 @@
         const backToTopBtn = document.getElementById('back-to-top');
         const vocabList = document.getElementById('vocab-list');
         const vocabCount = document.getElementById('vocab-count');
-        const forgeInput = document.getElementById('forge-input');
-        const forgeType = document.getElementById('forge-type');
-        const forgeBtn = document.getElementById('forge-btn');
-        const forgeResult = document.getElementById('forge-result');
-        const forgeOutput = document.getElementById('forge-output');
+
 
         // --- Utility Functions ---
 
@@ -238,6 +203,7 @@
          * @returns {string} The cleaned word.
          */
         const cleanWord = (word) => {
+            // Keep apostrophes (for Pos-Sha terms like zu'ral)
             return word.toLowerCase().replace(/[^a-z0-9']/g, '');
         }
 
@@ -265,14 +231,29 @@
 
                 if (currentMode === 'enToPs') {
                     // English to Pos-Sha translation
-                    translation = dictionary[cleaned] || cleaned; // Fallback to original word if not found
+                    if (dictionary[cleaned]) {
+                        translation = dictionary[cleaned];
+                    } else {
+                        // NEW LOGIC: If not found, apply pos...ti
+                        // Preserve the original cleaned word, but format it
+                        translation = `pos${cleaned}ti`; 
+                    }
                 } else {
                     // Pos-Sha to English translation
-                    translation = reverseDictionary[cleaned] || cleaned; // Fallback to original word
+                    if (reverseDictionary[cleaned]) {
+                        translation = reverseDictionary[cleaned];
+                    } else if (cleaned.startsWith('pos') && cleaned.endsWith('ti') && cleaned.length > 5) {
+                        // NEW LOGIC: If it looks like a pos...ti word, remove the tags
+                        // Example: poswordti -> word
+                        translation = cleaned.slice(3, -2);
+                    } else {
+                        // If not found and not a pos...ti word, just return the word
+                        translation = cleaned;
+                    }
                 }
 
                 // Preserve original casing of the first letter if it was capitalized
-                if (word[0] === word[0].toUpperCase() && word.length > 0) {
+                if (word.length > 0 && word[0] === word[0].toUpperCase() && translation.length > 0) {
                     translation = translation.charAt(0).toUpperCase() + translation.slice(1);
                 }
 
@@ -288,27 +269,17 @@
         const renderVocab = () => {
             vocabList.innerHTML = '';
             
-            // Combine dictionaries based on current mode for display
-            let displayDict;
-            let primaryLang, secondaryLang;
-            if (currentMode === 'enToPs') {
-                displayDict = dictionary;
-                primaryLang = 'English';
-                secondaryLang = 'Pos-Sha';
-            } else {
-                displayDict = reverseDictionary;
-                primaryLang = 'Pos-Sha';
-                secondaryLang = 'English';
-            }
+            // We'll always display English -> Pos-Sha for clarity in the Lexicon section
+            const displayDict = dictionary;
 
             const sortedKeys = Object.keys(displayDict).sort();
 
             sortedKeys.forEach(key => {
                 const term = document.createElement('div');
-                term.className = 'flex justify-between border-b border-slate-50/50 pb-1';
+                term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
                 term.innerHTML = `
-                    <span class="font-bold text-slate-700">${key.split('/')[0]}</span>
-                    <span class="font-ancient text-amber-600">${displayDict[key]}</span>
+                    <span class="font-bold text-slate-700 w-1/2">${key.split('/')[0].charAt(0).toUpperCase() + key.slice(1)}</span>
+                    <span class="font-ancient text-amber-600 w-1/2">${displayDict[key]}</span>
                 `;
                 vocabList.appendChild(term);
             });
@@ -341,7 +312,7 @@
             outputText.value = tempText || '...';
             
             swapIcon.classList.toggle('rotate-180-smooth');
-            renderVocab(); // Re-render vocab based on new mode
+            // renderVocab() is not needed on swap since we fixed it to always show EN->PS for clarity
         }
 
         /**
@@ -373,40 +344,6 @@
         }
         
         /**
-         * Generates a new Pos-Sha term and adds it to the dictionaries.
-         */
-        const forgeTerm = () => {
-            const englishRoot = forgeInput.value.trim().toLowerCase().replace(/\s+/g, '-');
-            const type = forgeType.value;
-            const suffix = suffixes[type];
-
-            if (!englishRoot) {
-                forgeOutput.textContent = "Enter a root word first, dawg!";
-                forgeResult.classList.add('block');
-                forgeResult.classList.remove('hidden');
-                return;
-            }
-
-            // Simple forging rule: take first 3 letters and append suffix
-            const rootPart = englishRoot.length >= 3 ? englishRoot.substring(0, 3) : englishRoot;
-            const posShaTerm = rootPart + suffix.replace('-', "'");
-            
-            // Add to dictionaries
-            dictionary[englishRoot] = posShaTerm;
-            reverseDictionary[posShaTerm] = englishRoot;
-
-            // Display result
-            forgeOutput.textContent = posShaTerm;
-            forgeResult.classList.add('block');
-            forgeResult.classList.remove('hidden');
-
-            // Clear input
-            forgeInput.value = '';
-            
-            renderVocab();
-        }
-
-        /**
          * Toggles the back-to-top button visibility.
          */
         const handleScroll = () => {
@@ -425,7 +362,6 @@
             swapModeBtn.addEventListener('click', swapMode);
             clearBtn.addEventListener('click', clearText);
             copyBtn.addEventListener('click', copyOutput);
-            forgeBtn.addEventListener('click', forgeTerm);
             window.addEventListener('scroll', handleScroll);
             
             // Initial setup
