@@ -150,7 +150,7 @@
             <div class="glass-card rounded-3xl p-6 md:col-span-2 overflow-hidden flex flex-col h-64 md:h-auto">
                 <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
                     <h3 class="font-ancient font-bold text-lg text-slate-800">The Core Lexicon</h3>
-                    <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Unknown pos...ti</span>
+                    <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded" id="vocab-count"></span>
                 </div>
                 
                 <div class="overflow-y-auto custom-scroll pr-2">
@@ -171,7 +171,8 @@
     </div>
 
     <script>
-        const dictionary = {
+        // Core Dictionaries (Unchanged)
+        let dictionary = {
             "i": "zu'ral", "me": "zu'ral", "my": "zu'ral", "mine": "zu'ral",
             "you": "na'rul", "your": "na'rul", "yours": "na'rul",
             "he": "si'nur", "him": "si'nur", "his": "si'nur",
@@ -184,14 +185,14 @@
             "man": "dr'om", "woman": "ny'li", "god": "sha'ron"
         };
 
-        const reverseDictionary = {
-            "zu'ral": "i",
-            "na'rul": "you",
-            "si'nur": "he",
-            "gu'ral": "we",
-            "klurak": "they",
-            "ha'ru": "this",
-            "vohrak": "that",
+        let reverseDictionary = {
+            "zu'ral": "i/me/my",
+            "na'rul": "you/your",
+            "si'nur": "he/she/it/him/her/his",
+            "gu'ral": "we/us/our",
+            "klurak": "they/them/their",
+            "ha'ru": "this/these",
+            "vohrak": "that/those",
             "zi'naz": "friend",
             "ky'ar": "dog",
             "kri'ez": "house",
@@ -200,8 +201,239 @@
             "ny'li": "woman",
             "sha'ron": "god"
         };
+        
+        const suffixes = {
+            "noun": "-iz",
+            "verb": "-ek",
+            "adj": "-vum",
+            "other": "-ril"
+        };
 
-        // everything else JS stays the same; just replace dictionary & reverseDictionary references
+        let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
+
+        // --- DOM Elements ---
+        const inputText = document.getElementById('input-text');
+        const outputText = document.getElementById('output-text');
+        const inputLabel = document.getElementById('input-label');
+        const outputLabel = document.getElementById('output-label');
+        const swapModeBtn = document.getElementById('swap-mode-btn');
+        const swapIcon = document.getElementById('swap-icon');
+        const clearBtn = document.getElementById('clear-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+        const backToTopBtn = document.getElementById('back-to-top');
+        const vocabList = document.getElementById('vocab-list');
+        const vocabCount = document.getElementById('vocab-count');
+        const forgeInput = document.getElementById('forge-input');
+        const forgeType = document.getElementById('forge-type');
+        const forgeBtn = document.getElementById('forge-btn');
+        const forgeResult = document.getElementById('forge-result');
+        const forgeOutput = document.getElementById('forge-output');
+
+        // --- Utility Functions ---
+
+        /**
+         * Cleans a word by converting to lower case and removing punctuation.
+         * @param {string} word 
+         * @returns {string} The cleaned word.
+         */
+        const cleanWord = (word) => {
+            return word.toLowerCase().replace(/[^a-z0-9']/g, '');
+        }
+
+        /**
+         * Main translation logic.
+         */
+        const translate = () => {
+            const input = inputText.value;
+            if (!input.trim()) {
+                outputText.value = '...';
+                return;
+            }
+
+            const words = input.split(/\s+/);
+            const translatedWords = words.map(word => {
+                const cleaned = cleanWord(word);
+                let translation = '';
+                let punctuation = '';
+
+                // Extract any trailing punctuation (e.g., ".", "?", "!")
+                const matchPunctuation = word.match(/([^a-zA-Z0-9']+)$/);
+                if (matchPunctuation) {
+                    punctuation = matchPunctuation[1];
+                }
+
+                if (currentMode === 'enToPs') {
+                    // English to Pos-Sha translation
+                    translation = dictionary[cleaned] || cleaned; // Fallback to original word if not found
+                } else {
+                    // Pos-Sha to English translation
+                    translation = reverseDictionary[cleaned] || cleaned; // Fallback to original word
+                }
+
+                // Preserve original casing of the first letter if it was capitalized
+                if (word[0] === word[0].toUpperCase() && word.length > 0) {
+                    translation = translation.charAt(0).toUpperCase() + translation.slice(1);
+                }
+
+                return translation + punctuation;
+            });
+
+            outputText.value = translatedWords.join(' ');
+        }
+
+        /**
+         * Renders the vocabulary list.
+         */
+        const renderVocab = () => {
+            vocabList.innerHTML = '';
+            
+            // Combine dictionaries based on current mode for display
+            let displayDict;
+            let primaryLang, secondaryLang;
+            if (currentMode === 'enToPs') {
+                displayDict = dictionary;
+                primaryLang = 'English';
+                secondaryLang = 'Pos-Sha';
+            } else {
+                displayDict = reverseDictionary;
+                primaryLang = 'Pos-Sha';
+                secondaryLang = 'English';
+            }
+
+            const sortedKeys = Object.keys(displayDict).sort();
+
+            sortedKeys.forEach(key => {
+                const term = document.createElement('div');
+                term.className = 'flex justify-between border-b border-slate-50/50 pb-1';
+                term.innerHTML = `
+                    <span class="font-bold text-slate-700">${key.split('/')[0]}</span>
+                    <span class="font-ancient text-amber-600">${displayDict[key]}</span>
+                `;
+                vocabList.appendChild(term);
+            });
+            
+            vocabCount.textContent = `${sortedKeys.length} terms`;
+        }
+
+
+        // --- Event Handlers ---
+
+        /**
+         * Toggles the translation mode (English <-> Pos-Sha).
+         */
+        const swapMode = () => {
+            currentMode = currentMode === 'enToPs' ? 'psToEn' : 'enToPs';
+            
+            if (currentMode === 'enToPs') {
+                inputLabel.textContent = 'English';
+                outputLabel.textContent = 'Pos-Sha';
+                inputText.placeholder = "type here, twin...";
+            } else {
+                inputLabel.textContent = 'Pos-Sha';
+                outputLabel.textContent = 'English';
+                inputText.placeholder = "Pos-Sha text...";
+            }
+
+            // Swap text contents
+            const tempText = inputText.value;
+            inputText.value = outputText.value;
+            outputText.value = tempText || '...';
+            
+            swapIcon.classList.toggle('rotate-180-smooth');
+            renderVocab(); // Re-render vocab based on new mode
+        }
+
+        /**
+         * Clears the input and output areas.
+         */
+        const clearText = () => {
+            inputText.value = '';
+            outputText.value = '...';
+            inputText.focus();
+        }
+
+        /**
+         * Copies the output text to the clipboard and shows a toast.
+         */
+        const copyOutput = () => {
+            if (outputText.value && outputText.value !== '...') {
+                navigator.clipboard.writeText(outputText.value).then(() => {
+                    // Show toast notification
+                    toast.classList.add('opacity-100', 'translate-y-0');
+                    toast.classList.remove('opacity-0', 'translate-y-[-20px]');
+                    setTimeout(() => {
+                        toast.classList.remove('opacity-100', 'translate-y-0');
+                        toast.classList.add('opacity-0', 'translate-y-[-20px]');
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+            }
+        }
+        
+        /**
+         * Generates a new Pos-Sha term and adds it to the dictionaries.
+         */
+        const forgeTerm = () => {
+            const englishRoot = forgeInput.value.trim().toLowerCase().replace(/\s+/g, '-');
+            const type = forgeType.value;
+            const suffix = suffixes[type];
+
+            if (!englishRoot) {
+                forgeOutput.textContent = "Enter a root word first, dawg!";
+                forgeResult.classList.add('block');
+                forgeResult.classList.remove('hidden');
+                return;
+            }
+
+            // Simple forging rule: take first 3 letters and append suffix
+            const rootPart = englishRoot.length >= 3 ? englishRoot.substring(0, 3) : englishRoot;
+            const posShaTerm = rootPart + suffix.replace('-', "'");
+            
+            // Add to dictionaries
+            dictionary[englishRoot] = posShaTerm;
+            reverseDictionary[posShaTerm] = englishRoot;
+
+            // Display result
+            forgeOutput.textContent = posShaTerm;
+            forgeResult.classList.add('block');
+            forgeResult.classList.remove('hidden');
+
+            // Clear input
+            forgeInput.value = '';
+            
+            renderVocab();
+        }
+
+        /**
+         * Toggles the back-to-top button visibility.
+         */
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('visible');
+            } else {
+                backToTopBtn.classList.remove('visible');
+            }
+        }
+
+        // --- Initialization ---
+
+        const init = () => {
+            // Event Listeners
+            inputText.addEventListener('input', translate);
+            swapModeBtn.addEventListener('click', swapMode);
+            clearBtn.addEventListener('click', clearText);
+            copyBtn.addEventListener('click', copyOutput);
+            forgeBtn.addEventListener('click', forgeTerm);
+            window.addEventListener('scroll', handleScroll);
+            
+            // Initial setup
+            renderVocab();
+        }
+
+        // Run initialization when the page is loaded
+        init();
     </script>
 </body>
 </html>
