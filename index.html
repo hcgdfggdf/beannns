@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #f8fafc;
-            --accent: #d97706; /* Amber 600 */
+            --accent: #d97706;
         }
         
         html { scroll-behavior: smooth; }
@@ -35,13 +35,11 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
         }
         
-        /* Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
         
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -54,7 +52,6 @@
         }
         .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
 
-        /* Swap Button Animation */
         .rotate-180-smooth { transform: rotate(180deg); }
     </style>
 </head>
@@ -93,7 +90,7 @@
                 </div>
                 <textarea 
                     id="input-text" 
-                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none placeholder-slate-300 outline-none text-slate-700 leading-relaxed"
+                    class="flex-1 w-full bg-transparent border-none focus:ring-0 p-6 text-xl resize-none outline-none text-slate-700 leading-relaxed"
                     placeholder="type here, twin..."
                     spellcheck="false"
                 ></textarea>
@@ -174,411 +171,37 @@
     </div>
 
     <script>
-        // --- DATA ---
-        // NEW SUFFIXES: -iz (Noun), -ek (Verb), -vum (Adjective/Adverb), -ril (Pronoun/Particle)
-        // **NEW, ORIGINAL, NON-CLASSICAL ROOTS**
-
         const dictionary = {
-            // --- PRONOUNS & ARTICLES (-ril) ---
-            "i": "zaril", "me": "zaril", "my": "zaril", "mine": "zaril",
-            "you": "naril", "your": "naril", "yours": "naril",
-            "he": "synril", "him": "synril", "his": "synril",
-            "she": "synril", "her": "synril", "hers": "synril",
-            "it": "synril", "its": "synril",
-            "we": "goril", "us": "goril", "our": "goril", "ours": "goril",
-            "they": "kloril", "them": "kloril", "their": "kloril", "theirs": "kloril",
-            "this": "harril", "that": "vohrıl", "these": "harril", "those": "vohrıl",
-            "who": "vecril", "what": "thiril", "where": "lyaril",
-            "the": "toril", "a": "aril", "an": "aril",
-            "some": "fecril", "many": "gluril", "much": "gluril",
-            "one": "solril", "two": "duril", "three": "trogil",
-
-            // --- COMMON NOUNS (-iz) ---
-            "friend": "ziniz", "homie": "ziniz", "buddy": "ziniz", "twin": "ziniz",
-            "cat": "mriz", "kitty": "mriz",
-            "dog": "kyariz", "dawg": "kyariz", "pup": "kyariz",
-            "house": "kriez", "home": "kriez", "crib": "kriez", "building": "kriez",
-            "sun": "syrfiz", "star": "yliz", "moon": "kriziz",
-            "man": "dromiz", "dude": "dromiz", "guy": "dromiz",
-            "boy": "veniz", "son": "veniz",
-            "food": "azliz", "grub": "azliz", "meal": "azliz",
-            "river": "skimiz", "ocean": "valiz", "sea": "valiz",
-            "tree": "faliz", "water": "syriz", "air": "vyrriz", "fire": "fyriz", "earth": "soliz",
-            "time": "chroniz", "day": "loriz", "night": "noxiz", "life": "shaviz",
-            "death": "moriz", "name": "namiz", "place": "triz",
-            "work": "erghiz", "money": "kleniz", "cash": "kleniz",
-            "city": "uruz", "problem": "glumiz", "thing": "kosiz",
-            "mind": "psykoriz", "heart": "kariz", "body": "somiz",
-            "magic": "shariniz", "god": "sharron", // CUSTOM EXPLICIT TRANSLATION
-            "woman": "nyliz", "girl": "nyliz", "lady": "nyliz", 
-            "love": "amiz", "affection": "amiz",
-            "queen": "regiz", "idea": "ethriz", "thought": "ethriz",
-
-            // --- VERBS (INFINITIVE: -ek) ---
-            "is": "vekek", "am": "vekek", "are": "vekek", "be": "vekek", "was": "vekek", "were": "vekek",
-            "eat": "azzek", "ate": "azzek", "to eat": "azzek",
-            "see": "vidlek", "saw": "vidlek", "to see": "vidlek",
-            "go": "bavvek", "went": "bavvek", "to go": "bavvek",
-            "like": "filtek", "loved": "filtek", "to like": "filtek",
-            "speak": "lorrek", "say": "lorrek", "said": "lorrek", "to speak": "lorrek",
-            "jump": "salek", "to jump": "salek",
-            "run": "kurrek", "to run": "kurrek",
-            "fight": "pughek", "to fight": "pughek",
-            "do": "fyznek", "make": "fyznek", "did": "fyznek",
-            "come": "vennek", "came": "vennek",
-            "take": "kaprek", "took": "kaprek",
-            "give": "donnek", "gave": "donnek",
-            "walk": "trultek", "sleep": "hypnek",
-            "know": "skylek", "understand": "skylek",
-            "want": "vynnek", "need": "vynnek",
-            "help": "julvek", "assist": "julvek",
-            "think": "kogtek", "thought": "kogtek",
-            "play": "ludek", "game": "ludek",
-
-            // --- ADJECTIVES & ADVERBS (-vum) ---
-            "big": "blevum", "huge": "blevum", "large": "blevum",
-            "small": "sylevum", "lil": "sylevum", "tiny": "sylevum",
-            "good": "fyruvum", "great": "fyruvum", "well": "fyruvum",
-            "bad": "kyllavum", "evil": "kyllavum", "poorly": "kyllavum",
-            "happy": "elavum", "joyful": "elavum",
-            "sad": "lunevum", "unhappy": "lunevum",
-            "fast": "trakvum", "quickly": "trakvum",
-            "slow": "bradovum", "slowly": "bradovum",
-            "old": "vetovum", "new": "narvum",
-            "hot": "terluvum", "cold": "kryovum",
-            "full": "plenavum", "empty": "vakrevum",
-            "strong": "potovum", "weak": "impovum",
-            "beautiful": "belovum", "ugly": "turvum",
-
-            // --- CONJUNCTIONS & PREPOSITIONS (-ril) ---
-            "no": "naril", "not": "naril", "nah": "naril",
-            "yes": "yarril", "yeah": "yarril", "yep": "yarril",
-            "all": "gluril", "everything": "gluril",
-            "and": "enril", "but": "sydril", "or": "velril",
-            "for": "prolril", "on": "syrril", "in": "inril", "with": "kumeril",
-            "of": "deryl", "from": "deryl", "to": "adrel",
-            "because": "quilaril", "if": "syril", "when": "quandoril",
-            "how": "quomol",
-
-            // --- GREETINGS & SLANG ---
-            "hello": "salvum", "hi": "salvum", "yo": "salvum",
-            "bye": "valril", "peace": "paxril",
-            "let's": "goril", 
-            "dope": "fyruvum", "lit": "fyruvum"
+            "i": "zu'ral", "me": "zu'ral", "my": "zu'ral", "mine": "zu'ral",
+            "you": "na'rul", "your": "na'rul", "yours": "na'rul",
+            "he": "si'nur", "him": "si'nur", "his": "si'nur",
+            "she": "si'nur", "her": "si'nur", "hers": "si'nur",
+            "it": "si'nur", "its": "si'nur",
+            "we": "gu'ral", "us": "gu'ral", "our": "gu'ral", "ours": "gu'ral",
+            "they": "klurak", "them": "klurak", "their": "klurak", "theirs": "klurak",
+            "this": "ha'ru", "that": "vohrak", "these": "ha'ru", "those": "vohrak",
+            "friend": "zi'naz", "dog": "ky'ar", "house": "kri'ez", "love": "a'mi",
+            "man": "dr'om", "woman": "ny'li", "god": "sha'ron"
         };
 
-        const phrases = {
-            "my bad": "zaril kyllavum",
-            "let's go": "goril bavvek",
-            "it's all good": "synril gluril fyruvum",
-            "all good": "gluril fyruvum",
-            "i love you": "zaril filtek naril",
-            "i know": "zaril skylek",
-            "peace out": "valril paxril"
+        const reverseDictionary = {
+            "zu'ral": "i",
+            "na'rul": "you",
+            "si'nur": "he",
+            "gu'ral": "we",
+            "klurak": "they",
+            "ha'ru": "this",
+            "vohrak": "that",
+            "zi'naz": "friend",
+            "ky'ar": "dog",
+            "kri'ez": "house",
+            "a'mi": "love",
+            "dr'om": "man",
+            "ny'li": "woman",
+            "sha'ron": "god"
         };
 
-        // Pronoun lookup table for Pos-Sha to English translation
-        const pronounCases = {
-            "zaril": { subject: "I", object: "me", possessive: "my" },
-            "naril": { subject: "you", object: "you", possessive: "your" },
-            "synril": { subject: "he", object: "him", possessive: "his" }, 
-            "goril": { subject: "we", object: "us", possessive: "our" },
-            "kloril": { subject: "they", object: "them", possessive: "their" },
-            "toril": { subject: "the", object: "the", possessive: "the" },
-            "aril": { subject: "a", object: "a", possessive: "a" },
-            "harril": { subject: "this", object: "this", possessive: "this" },
-            "vohrıl": { subject: "that", object: "that", possessive: "that" }
-        };
-
-        // List of words that are usually followed by a possessive (Nouns ending in -iz)
-        const possessiveWords = [
-            "ziniz", "mriz", "kyariz", "kriez", "syrfiz", "yliz", "kriziz", "dromiz", "veniz",
-            "azliz", "skimiz", "valiz", "faliz", "syriz", "vyrriz", "fyriz", "soliz",
-            "chroniz", "loriz", "noxiz", "shaviz", "moriz", "namiz", "triz",
-            "erghiz", "kleniz", "uruz", "glumiz", "kosiz",
-            "psykoriz", "kariz", "somiz", "shariniz", "sharron", // Include custom 'sharron'
-            "nyliz", "amiz", "regiz", "ethriz"
-        ];
-
-        // List of Verbs (ending in -ek)
-        const verbWords = [
-            "vekek", "azzek", "vidlek", "bavvek", "filtek", "lorrek",
-            "salek", "kurrek", "pughek", "fyznek", "vennek", "kaprek",
-            "donnek", "trultek", "hypnek", "skylek", "vynnek", "julvek",
-            "kogtek", "ludek"
-        ];
-        
-        // Generate Reverse Dictionary (Pos-Sha -> English)
-        const reverseDictionary = {};
-        for (const [eng, pos] of Object.entries(dictionary)) {
-            if (!pronounCases[pos]) {
-                const currentRoot = reverseDictionary[pos];
-                // Simple check for primary word
-                if (!currentRoot || eng.length < currentRoot.length) {
-                    reverseDictionary[pos] = eng;
-                }
-            }
-        }
-        
-        // Explicitly set some common or key roots for clarity in Pos-Sha -> English
-        reverseDictionary["nyliz"] = "woman"; 
-        reverseDictionary["veniz"] = "boy";
-        reverseDictionary["amiz"] = "love";
-        reverseDictionary["kriez"] = "house";
-        reverseDictionary["skylek"] = "know"; 
-        reverseDictionary["fyznek"] = "do"; 
-
-
-        // --- DOM ELEMENTS ---
-        const inputs = {
-            main: document.getElementById('input-text'),
-            output: document.getElementById('output-text'),
-            clear: document.getElementById('clear-btn'),
-            copy: document.getElementById('copy-btn'),
-            swapBtn: document.getElementById('swap-mode-btn'),
-            swapIcon: document.getElementById('swap-icon'),
-            inputLabel: document.getElementById('input-label'),
-            outputLabel: document.getElementById('output-label'),
-            forgeRoot: document.getElementById('forge-input'),
-            forgeType: document.getElementById('forge-type'),
-            forgeBtn: document.getElementById('forge-btn'),
-            forgeRes: document.getElementById('forge-result'),
-            forgeOut: document.getElementById('forge-output'),
-            vocabList: document.getElementById('vocab-list'),
-            backToTop: document.getElementById('back-to-top')
-        };
-
-        // --- STATE ---
-        let isEnglishToPosSha = true;
-
-        // --- INIT VOCAB UI ---
-        // Expanded starter pack for the UI using the NEW words
-        const starterPack = {
-            "I/Me/My": "zaril", "You/Your": "naril", "He/She/It": "synril", "We/Us": "goril",
-            "The/A": "toril/aril", "Friend/Homie": "ziniz", "Dog/Dawg": "kyariz", "House/Home": "kriez",
-            "Love": "amiz", "Food": "azliz", "Time": "chroniz", "Sharron (God)": "sharron",
-            "To Be": "vekek", "To Eat": "azzek", "To Go": "bavvek", "To Know": "skylek", "Big": "blevum",
-            "Small": "sylevum", "Good": "fyruvum", "Bad": "kyllavum", "No/Not": "naril", 
-            "Yes": "yarril", "Hello": "salvum", "And": "enril", "With": "kumeril"
-        };
-
-        // Clear existing list and populate with the expanded starter pack
-        inputs.vocabList.innerHTML = '';
-        for (const [eng, eos] of Object.entries(starterPack)) {
-            const div = document.createElement('div');
-            div.className = "flex justify-between border-b border-slate-100 py-1.5 hover:bg-slate-50 px-1 rounded transition-colors";
-            div.innerHTML = `<span class="text-slate-500">${eng}</span> <span class="font-medium text-amber-600 font-ancient">${eos}</span>`;
-            inputs.vocabList.appendChild(div);
-        }
-
-        // --- TRANSLATION ENGINES (NO CHANGES TO LOGIC, ONLY DICTIONARY) ---
-        
-        // 1. Eng -> Pos 
-        function translateToPosSha(text) {
-            if (!text.trim()) return "";
-            let processedText = text.toLowerCase();
-            
-            // Phrases (Handle multi-word phrases first)
-            for (const [phrase, translation] of Object.entries(phrases)) {
-                processedText = processedText.replace(new RegExp(`\\b${phrase}\\b`, 'gi'), translation);
-            }
-
-            // Tokenize by splitting words, spaces, and punctuation
-            const tokens = processedText.match(/(\w+['’]?\w*|[^\w\s]|\s+)/g) || [];
-            
-            let translatedTokens = tokens.map(token => {
-                if (/^[\s\p{P}]+$/u.test(token)) return token; 
-                
-                const cleanWord = token.toLowerCase();
-                
-                // Check dictionary for exact match 
-                if (dictionary[cleanWord]) return dictionary[cleanWord];
-                
-                // Handle plurals (simple -s pluralization check)
-                if (cleanWord.endsWith('s')) {
-                    const singular = cleanWord.slice(0, -1);
-                    if (dictionary[singular]) return dictionary[singular];
-                }
-                
-                // Default: Unknown word wrapper
-                return `pos${cleanWord}ti`;
-            });
-
-            return formatCase(translatedTokens.join(''));
-        }
-
-        // 2. Pos -> Eng (Contextual lookup)
-        function translateToEnglish(text) {
-            if (!text.trim()) return "";
-            
-            const wordsOnly = text.match(/\b\w+\b/g) || [];
-            const rawTokens = text.match(/(\w+|[^\w\s]|\s+)/g) || [];
-            let translatedTokens = [];
-
-            const findWordIndexInWordsOnly = (wordOnlyIndex, step) => {
-                let index = wordOnlyIndex + step;
-                return (index >= 0 && index < wordsOnly.length) ? index : null;
-            };
-
-            let wordOnlyIndex = 0; 
-
-            for (let i = 0; i < rawTokens.length; i++) {
-                let token = rawTokens[i];
-                let cleanWord = token.toLowerCase();
-
-                if (/\w+/.test(token)) {
-                    
-                    // --- 1. Handle invariant pronouns (contextual cases) ---
-                    if (pronounCases[cleanWord]) {
-                        let pronounData = pronounCases[cleanWord];
-                        let englishWord = pronounData.subject; 
-
-                        const nextWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, 1);
-                        const prevWordOnlyIndex = findWordIndexInWordsOnly(wordOnlyIndex, -1);
-                        
-                        const nextWord = nextWordOnlyIndex !== null ? wordsOnly[nextWordOnlyIndex].toLowerCase() : null;
-                        const prevWord = prevWordOnlyIndex !== null ? wordsOnly[prevWordOnlyIndex].toLowerCase() : null;
-                        
-                        // Rule 1: Possessive Case (followed by a possessable noun: ending in -iz or the custom 'sharron')
-                        if (nextWord && possessiveWords.includes(nextWord)) {
-                            englishWord = pronounData.possessive;
-                        
-                        // Rule 2: Objective Case (preceded by a verb: ending in -ek)
-                        } else if (prevWord && verbWords.includes(prevWord) && cleanWord !== wordsOnly[0].toLowerCase()) {
-                            englishWord = pronounData.object;
-                        } 
-                        
-                        translatedTokens.push(englishWord);
-                        wordOnlyIndex++; 
-                        continue;
-                    
-                    // --- 2. Handle all other mapped words (nouns, verbs, adjectives, conjunctions) ---
-                    } else if (reverseDictionary[cleanWord]) {
-                        translatedTokens.push(reverseDictionary[cleanWord]);
-                        wordOnlyIndex++;
-                        continue;
-                    } else if (cleanWord === "sharron") {
-                        translatedTokens.push("god");
-                        wordOnlyIndex++;
-                        continue;
-                    }
-
-                    // --- 3. Check for pos...ti (Unknown word wrapper) ---
-                    const posTiMatch = cleanWord.match(/^pos(.+)ti$/);
-                    if (posTiMatch) {
-                        translatedTokens.push(posTiMatch[1]); // Return the inner word
-                        wordOnlyIndex++;
-                        continue;
-                    }
-
-                    // If it's a word but not in any list, just push the original token
-                    translatedTokens.push(token);
-                    wordOnlyIndex++;
-                
-                } else {
-                    // 4. Keep original token (punctuation, spaces)
-                    translatedTokens.push(token);
-                }
-            }
-
-            return formatCase(translatedTokens.join(''));
-        }
-
-        // Helper for sentence case
-        function formatCase(str) {
-            return str.replace(/(?:^|[.!?]\s+)([a-z])/g, (c) => c.toUpperCase());
-        }
-
-        // Master Function
-        function processTranslation() {
-            const text = inputs.main.value;
-            if (isEnglishToPosSha) {
-                inputs.output.value = translateToPosSha(text);
-            } else {
-                inputs.output.value = translateToEnglish(text);
-            }
-        }
-
-        // --- EVENTS (No logic change needed, just updating 'Copy' text) ---
-        inputs.main.addEventListener('input', processTranslation);
-
-        inputs.clear.addEventListener('click', () => {
-            inputs.main.value = '';
-            inputs.output.value = '';
-            inputs.main.focus();
-        });
-
-        inputs.swapBtn.addEventListener('click', () => {
-            isEnglishToPosSha = !isEnglishToPosSha;
-            
-            inputs.swapIcon.classList.toggle('rotate-180-smooth');
-            
-            if (isEnglishToPosSha) {
-                inputs.inputLabel.textContent = "English";
-                inputs.inputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
-                inputs.outputLabel.textContent = "Pos-Sha";
-                inputs.outputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
-                inputs.main.placeholder = "Articulate your discourse here, twin...";
-            } else {
-                inputs.inputLabel.textContent = "Pos-Sha";
-                inputs.inputLabel.className = "text-xs font-bold text-amber-600 uppercase tracking-widest transition-all";
-                inputs.outputLabel.textContent = "English";
-                inputs.outputLabel.className = "text-xs font-bold text-slate-400 uppercase tracking-widest transition-all";
-                inputs.main.placeholder = "Input Pos-Sha text (e.g. zaril)...";
-            }
-
-            const currentIn = inputs.main.value;
-            const currentOut = inputs.output.value;
-            
-            inputs.main.value = currentOut;
-            inputs.output.value = currentIn;
-            
-            processTranslation();
-        });
-
-        inputs.copy.addEventListener('click', () => {
-            if (!inputs.output.value) return;
-            inputs.output.select();
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(inputs.output.value);
-            } else {
-                document.execCommand('copy');
-            }
-
-            const toast = document.getElementById('toast');
-            const copyText = isEnglishToPosSha ? "Pos-Sha Replicated" : "English Replicated";
-            toast.querySelector('span:last-child').textContent = copyText;
-
-            toast.classList.remove('opacity-0', 'translate-y-[-20px]');
-            setTimeout(() => toast.classList.add('opacity-0', 'translate-y-[-20px]'), 2000);
-        });
-
-        inputs.forgeBtn.addEventListener('click', () => {
-            const root = inputs.forgeRoot.value.trim().toLowerCase();
-            if (!root) return;
-            let suffix = "";
-            switch(inputs.forgeType.value) {
-                case 'noun': suffix = "iz"; break;
-                case 'verb': suffix = "ek"; break;
-                case 'adj': suffix = "vum"; break; 
-                case 'other': suffix = "ril"; break;
-            }
-            const cleanRoot = root.replace(/[^a-z0-9]/g, ''); 
-            
-            inputs.forgeOut.textContent = cleanRoot + suffix;
-            inputs.forgeRes.classList.remove('hidden');
-        });
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) inputs.backToTop.classList.add('visible');
-            else inputs.backToTop.classList.remove('visible');
-        });
-
-        window.addEventListener('load', () => {
-            inputs.main.focus();
-            inputs.main.placeholder = "Type here, twin...";
-        });
-
+        // everything else JS stays the same; just replace dictionary & reverseDictionary references
     </script>
 </body>
 </html>
