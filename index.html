@@ -157,8 +157,18 @@
             "we": "gu'ral", "us": "gu'ral", "our": "gu'ral", "ours": "gu'ral",
             "they": "klurak", "them": "klurak", "their": "klurak", "theirs": "klurak",
             "this": "ha'ru", "that": "vohrak", "these": "ha'ru", "those": "vohrak",
+            // New Additions: Nouns
             "friend": "zi'naz", "dog": "ky'ar", "house": "kri'ez", "love": "a'mi",
-            "man": "dr'om", "woman": "ny'li", "god": "sha'ron"
+            "man": "dr'om", "woman": "ny'li", "god": "sha'ron", 
+            "water": "a'quil", "fire": "fyr'os", "sun": "sy'lar", "moon": "lun'ra", "stone": "pet'ra", "rock": "pet'ra",
+            // New Additions: Verbs
+            "is": "es'ta", "am": "es'ta", "are": "es'ta", "to be": "es'ta", 
+            "have": "ka'dren", "has": "ka'dren", "go": "va'ri", "went": "va'ri", "going": "va'ri", 
+            "speak": "gu'vok", "say": "gu'vok", "tell": "gu'vok", 
+            "see": "vri'da", "look": "vri'da", "watch": "vri'da",
+            // New Additions: Adjectives & Conjunctions
+            "big": "mag'na", "great": "mag'na", "small": "mi'ni", "little": "mi'ni",
+            "and": "et", "but": "sed"
         };
 
         let reverseDictionary = {
@@ -169,13 +179,30 @@
             "klurak": "they/them/their",
             "ha'ru": "this/these",
             "vohrak": "that/those",
+            // New Additions: Nouns
             "zi'naz": "friend",
             "ky'ar": "dog",
             "kri'ez": "house",
             "a'mi": "love",
             "dr'om": "man",
             "ny'li": "woman",
-            "sha'ron": "god"
+            "sha'ron": "god",
+            "a'quil": "water",
+            "fyr'os": "fire",
+            "sy'lar": "sun",
+            "lun'ra": "moon",
+            "pet'ra": "stone/rock",
+            // New Additions: Verbs
+            "es'ta": "is/am/are/to be",
+            "ka'dren": "have/has",
+            "va'ri": "go/went",
+            "gu'vok": "speak/say/tell",
+            "vri'da": "see/look/watch",
+            // New Additions: Adjectives & Conjunctions
+            "mag'na": "big/great",
+            "mi'ni": "small/little",
+            "et": "and",
+            "sed": "but"
         };
         
         let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
@@ -275,16 +302,22 @@
             const sortedKeys = Object.keys(displayDict).sort();
 
             sortedKeys.forEach(key => {
+                // Ensure we handle multi-word definitions for the display list nicely
+                const posShaTerm = displayDict[key];
+                
+                // Get the main English word for display (handles cases like "is: es'ta" where "is" is the key)
+                const englishTerm = key.split('/')[0]; 
+                
                 const term = document.createElement('div');
                 term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
                 term.innerHTML = `
-                    <span class="font-bold text-slate-700 w-1/2">${key.split('/')[0].charAt(0).toUpperCase() + key.slice(1)}</span>
-                    <span class="font-ancient text-amber-600 w-1/2">${displayDict[key]}</span>
+                    <span class="font-bold text-slate-700 w-1/2">${englishTerm.charAt(0).toUpperCase() + englishTerm.slice(1)}</span>
+                    <span class="font-ancient text-amber-600 w-1/2">${posShaTerm}</span>
                 `;
                 vocabList.appendChild(term);
             });
             
-            vocabCount.textContent = `${sortedKeys.length} terms`;
+            vocabCount.textContent = `${Object.keys(reverseDictionary).length} terms`; // Count unique Pos-Sha terms
         }
 
 
