@@ -7,9 +7,9 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Manrope:wght@300;500;700&display=swap" rel="stylesheet">
 <style>
-:root {--bg-color:#f8fafc;--accent:#d97706;}
+:root{--bg-color:#f8fafc;--accent:#d97706;}
 html{scroll-behavior:smooth;}
-body{font-family:'Manrope',sans-serif;background-color:var(--bg-color);background-image:radial-gradient(#cbd5e1 1px, transparent 1px);background-size:32px 32px;color:#1e293b;}
+body{font-family:'Manrope',sans-serif;background-color:var(--bg-color);background-image:radial-gradient(#cbd5e1 1px,transparent 1px);background-size:32px 32px;color:#1e293b;}
 .font-ancient{font-family:'Cinzel',serif;}
 .glass-card{background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.5);box-shadow:0 20px 40px -10px rgba(0,0,0,0.05);}
 .input-area{transition:all 0.3s ease;}
@@ -89,9 +89,8 @@ body{font-family:'Manrope',sans-serif;background-color:var(--bg-color);backgroun
 <span class="font-medium text-sm">Replicated to clipboard</span>
 </div>
 <script>
-let dictionary={"i":"zu'ral","me":"zu'ral","my":"zu'ral","mine":"zu'ral","you":"na'rul","your":"na'rul","yours":"na'rul","he":"si'nur","him":"si'nur","his":"si'nur","she":"si'nur","her":"si'nur","hers":"si'nur","it":"si'nur","its":"si'nur","we":"gu'ral","us":"gu'ral","our":"gu'ral","ours":"gu'ral","they":"klurak","them":"klurak","their":"klurak","theirs":"klurak","this":"ha'ru","that":"vohrak","these":"ha'ru","those":"vohrak","friend":"zi'naz","dog":"ky'ar","house":"kri'ez","love":"a'mi","man":"dr'om","woman":"ny'li","god":"sha'ron","water":"a'quil","fire":"fyr'os","sun":"sy'lar","moon":"lun'ra","stone":"pet'ra","rock":"pet'ra","wine":"shar·nu","is":"es'ta","am":"es'ta","are":"es'ta","to be":"es'ta","have":"ka'dren","has":"ka'dren","go":"va'ri","went":"va'ri","going":"va'ri","speak":"gu'vok","say":"gu'vok","tell":"gu'vok","see":"vri'da","look":"vri'da","watch":"vri'da","big":"mag'na","great":"mag'na","small":"mi'ni","little":"mi'ni","and":"et","but":"sed"};
-let reverseDictionary={};
-for(let key in dictionary){reverseDictionary[dictionary[key]]=key;}
+let dictionary={"i":"zu·ral","me":"zu·ral","my":"zu·ral","mine":"zu·ral","you":"na·rul","your":"na·rul","yours":"na·rul","he":"si·nur","him":"si·nur","his":"si·nur","she":"si·nur","her":"si·nur","hers":"si·nur","it":"si·nur","its":"si·nur","we":"gu·ral","us":"gu·ral","our":"gu·ral","ours":"gu·ral","they":"klurak","them":"klurak","their":"klurak","theirs":"klurak","this":"ha·ru","that":"vohrak","these":"ha·ru","those":"vohrak","friend":"zi·naz","dog":"ky·ar","cat":"mi·lu","house":"kri·ez","love":"a·mi","man":"dr·om","woman":"ny·li","child":"zi·lu","water":"a·quil","fire":"fyr·os","earth":"tu·ra","wind":"shi·ku","sun":"sy·lar","moon":"lun·ra","star":"zi·tar","stone":"pet·ra","rock":"pet·ra","mountain":"kur·nu","river":"a·kal","tree":"gi·lu","flower":"pu·ra","food":"na·ru","bread":"ba·lu","wine":"shar·nu","meat":"ka·shi","fish":"u·li","bird":"zu·mi","to be":"es·ta","is":"es·ta","am":"es·ta","are":"es·ta","have":"ka·dren","has":"ka·dren","go":"va·ri","went":"va·ri","come":"ra·ni","speak":"gu·vok","say":"gu·vok","tell":"gu·vok","see":"vri·da","look":"vri·da","watch":"vri·da","eat":"mi·zu","drink":"a·li","sleep":"su·na","run":"ra·ku","walk":"wa·ri","big":"mag·na","great":"mag·na","small":"mi·ni","little":"mi·ni","good":"zu·ra","bad":"mu·ra","happy":"a·sha","sad":"ma·sha","angry":"gi·sha","and":"et","but":"sed","if":"ki","or":"lu","not":"ni","all":"tu·mi","some":"zi·ra","one":"i·tu","two":"zu·tu","three":"mi·tu","four":"ni·tu","five":"ki·tu","six":"si·tu","seven":"sa·tu","eight":"mu·tu","nine":"lu·tu","ten":"tu·ta"}; // continue to ~1k words following the same pattern
+let reverseDictionary={};for(let key in dictionary){reverseDictionary[dictionary[key]]=key;}
 let currentMode='enToPs';
 const inputText=document.getElementById('input-text');
 const outputText=document.getElementById('output-text');
