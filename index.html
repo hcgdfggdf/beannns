@@ -53,12 +53,6 @@
         .back-to-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
 
         .rotate-180-smooth { transform: rotate(180deg); }
-
-        /* === NEW VOCAB STYLE FOR SUPER BIGGER TERMS === */
-        .vocab-term-text {
-            font-size: 1.125rem; /* text-lg */
-            line-height: 1.75rem; /* leading-7 */
-        }
     </style>
 </head>
 <body id="top" class="min-h-screen flex flex-col items-center py-12 px-4 selection:bg-amber-100 selection:text-amber-900 relative">
@@ -131,11 +125,12 @@
             
             <div class="glass-card rounded-3xl p-6 md:col-span-3 overflow-hidden flex flex-col">
                 <div class="flex justify-between items-baseline mb-4 border-b border-slate-100 pb-2">
-                    <h3 class="font-ancient font-bold text-2xl text-slate-800">The Core Lexicon</h3>
+                    <h3 class="font-ancient font-bold text-lg text-slate-800">The Core Lexicon</h3>
                     <span class="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded" id="vocab-count"></span>
                 </div>
                 
-                <div class="overflow-y-auto custom-scroll pr-2 max-h-[500px]"> <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="vocab-list">
+                <div class="overflow-y-auto custom-scroll pr-2 max-h-96">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm" id="vocab-list">
                         </div>
                 </div>
             </div>
@@ -163,19 +158,7 @@
             "they": "klurak", "them": "klurak", "their": "klurak", "theirs": "klurak",
             "this": "ha'ru", "that": "vohrak", "these": "ha'ru", "those": "vohrak",
             "friend": "zi'naz", "dog": "ky'ar", "house": "kri'ez", "love": "a'mi",
-            "man": "dr'om", "woman": "ny'li", "god": "sha'ron",
-            // --- NEW TERMS START ---
-            "to be": "shal", "is": "shal", "am": "shal", "are": "shal", 
-            "to go": "ve'ra", "go": "ve'ra",
-            "to see": "li'da", "see": "li'da",
-            "to eat": "m'un", "eat": "m'un",
-            "and": "tek",
-            "but": "vir",
-            "big": "gra'al",
-            "small": "ni'ko",
-            "yes": "e'ya",
-            "no": "na'as"
-            // --- NEW TERMS END ---
+            "man": "dr'om", "woman": "ny'li", "god": "sha'ron"
         };
 
         let reverseDictionary = {
@@ -192,19 +175,7 @@
             "a'mi": "love",
             "dr'om": "man",
             "ny'li": "woman",
-            "sha'ron": "god",
-            // --- NEW TERMS START ---
-            "shal": "to be/is/am/are",
-            "ve'ra": "to go/go",
-            "li'da": "to see/see",
-            "m'un": "to eat/eat",
-            "tek": "and",
-            "vir": "but",
-            "gra'al": "big",
-            "ni'ko": "small",
-            "e'ya": "yes",
-            "na'as": "no"
-            // --- NEW TERMS END ---
+            "sha'ron": "god"
         };
         
         let currentMode = 'enToPs'; // 'enToPs' or 'psToEn'
@@ -303,34 +274,17 @@
 
             const sortedKeys = Object.keys(displayDict).sort();
 
-            // Filter out redundant keys (like "i", "me", "my" which all map to "zu'ral")
-            const uniqueEnglishTerms = new Set();
-            const filteredKeys = sortedKeys.filter(key => {
-                const translation = displayDict[key];
-                // Check if the translation has already been displayed
-                if (!uniqueEnglishTerms.has(translation)) {
-                    uniqueEnglishTerms.add(translation);
-                    return true; // Keep this key as the representative for its translation
-                }
-                return false; // Skip redundant keys
-            });
-
-            filteredKeys.forEach(key => {
+            sortedKeys.forEach(key => {
                 const term = document.createElement('div');
-                // Added py-2 for more vertical space between terms
-                term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 py-2'; 
-                
-                // Use the reverse dictionary for the English term to show all forms (e.g., "i/me/my" for zu'ral)
-                const englishForms = reverseDictionary[displayDict[key]] || key;
-
+                term.className = 'flex flex-col md:flex-row md:justify-between border-b border-slate-50/50 pb-1';
                 term.innerHTML = `
-                    <span class="vocab-term-text font-bold text-slate-700 w-1/2">${englishForms.charAt(0).toUpperCase() + englishForms.slice(1)}</span>
-                    <span class="vocab-term-text font-ancient text-amber-600 w-1/2">${displayDict[key]}</span>
+                    <span class="font-bold text-slate-700 w-1/2">${key.split('/')[0].charAt(0).toUpperCase() + key.slice(1)}</span>
+                    <span class="font-ancient text-amber-600 w-1/2">${displayDict[key]}</span>
                 `;
                 vocabList.appendChild(term);
             });
             
-            vocabCount.textContent = `${uniqueEnglishTerms.size} terms`; // Count based on unique translations
+            vocabCount.textContent = `${sortedKeys.length} terms`;
         }
 
 
